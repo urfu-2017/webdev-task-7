@@ -1,0 +1,12 @@
+language: node_js
+node_js:
+  - "8"
+
+services:
+  - postgresql
+
+script:
+  - npm test
+
+  - unzip -P $PASSWORD extra.zip
+  - cd extra && npm i && npm test
