@@ -1,11 +1,15 @@
 'use strict';
 
 module.exports = (sequelize, DataTypes) => {
-    // Ваша модель корзины
-    return sequelize.define('carts', {
-        id: {
+    // Ваша модель сувенира
+    return sequelize.define('souvenir_tags', {
+        tagId: {
             type: DataTypes.INTEGER,
             primaryKey: true,
+            allowNull: false
+        },
+        souvenirId: {
+            type: DataTypes.INTEGER,
             allowNull: false
         },
         createdAt: {
@@ -15,7 +19,6 @@ module.exports = (sequelize, DataTypes) => {
         updatedAt: {
             type: DataTypes.DATE,
             allowNull: false
-        },
-        userId: DataTypes.INTEGER
+        }
     });
 };
