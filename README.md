@@ -7,7 +7,7 @@
 - [Как пройти тесты](https://github.com/urfu-2017/guides/blob/master/workflow/test.md)
 - Правила оформления [javascript](https://github.com/urfu-2017/guides/blob/master/codestyle/js.md), [HTML](https://github.com/urfu-2017/guides/blob/master/codestyle/html.md) и [CSS](https://github.com/urfu-2017/guides/blob/master/codestyle/css.md) кода
 
-## Основное задание
+## Основное заданиеe
 
 Билли решил сравнить две базы данных: `MongoDB` и `PostgreSQL`, чтобы решить, какая из них лучше подходит
 для его магазина.
