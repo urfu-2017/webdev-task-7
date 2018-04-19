@@ -2,12 +2,7 @@
 
 module.exports = (sequelize, DataTypes) => {
     // Ваша модель корзины
-    return sequelize.define('carts', {
-        id: {
-            type: DataTypes.INTEGER,
-            primaryKey: true,
-            allowNull: false
-        },
+    return sequelize.define('cart_souvenir', {
         createdAt: {
             type: DataTypes.DATE,
             allowNull: false
@@ -16,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.DATE,
             allowNull: false
         },
-        userId: DataTypes.INTEGER
+        cartId: DataTypes.INTEGER,
+        souvenirId: DataTypes.INTEGER
     });
 };

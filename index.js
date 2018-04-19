@@ -16,11 +16,18 @@ const sequelize = new Sequalize(process.env.DB_NAME, process.env.DB_USER, proces
 const Country = sequelize.import('models/country');
 const Tag = sequelize.import('models/tag');
 const Review = sequelize.import('models/review');
+const SouvenirTags = sequelize.import('models/souvenirTags');
 const Souvenir = sequelize.import('models/souvenir');
+const CartSouvenirs = sequelize.import('models/cartSouvenirs');
 const Cart = sequelize.import('models/cart');
 const User = sequelize.import('models/user');
 
 // Ваши relations между моделями :)
+Souvenir.belongsToMany(Tag, { through: SouvenirTags });
+Souvenir.belongsTo(Country);
+Souvenir.hasMany(Review);
+User.hasOne(Cart);
+Cart.belongsToMany(Souvenir, { through: CartSouvenirs });
 
 module.exports.sequelize = sequelize;
 
