@@ -24,6 +24,7 @@ const User = sequelize.import('models/user');
 
 // Ваши relations между моделями :)
 Souvenir.belongsToMany(Tag, { through: SouvenirTags });
+Tag.belongsToMany(Souvenir, { through: SouvenirTags });
 Souvenir.belongsToMany(Cart, { through: CartSouvenirs });
 Cart.belongsToMany(Souvenir, { through: CartSouvenirs });
 Souvenir.belongsTo(Country);
