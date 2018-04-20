@@ -34,7 +34,8 @@ class Queries {
             attributes: ['id', 'name', 'image', 'price', 'rating'],
             include: {
                 model: this.tag,
-                where: { name: tag }
+                where: { name: tag },
+                attributes: []
             }
         });
     }
@@ -61,7 +62,10 @@ class Queries {
     getDisscusedSouvenirs(n) {
         return this.souvenir.findAll({
             attributes: ['id', 'name', 'image', 'price', 'rating'],
-            include: { model: this.review },
+            include: {
+                model: this.review,
+                attributes: []
+            },
             group: 'souvenirs.id',
             having: this.sequelize.where(
                 this.sequelize.fn('COUNT', this.sequelize.col('reviews.id')), '>=', n
@@ -80,14 +84,9 @@ class Queries {
         const souvenir = await this.souvenir.findById(souvenirId);
 
         return this.sequelize.transaction(async transaction => {
-            const review = await this.review.create({ text, rating }, { transaction });
+            await souvenir.createReview({ userId: user.id, text, rating }, { transaction });
 
-            user.addReview(review, { transaction });
-            souvenir.addReview(review, { transaction });
-
-            await review.save({ transaction });
-
-            const reviews = await souvenir.getReviews({}, { transaction });
+            const reviews = await souvenir.getReviews({ transaction });
             rating = (souvenir.rating * reviews.length + rating) / (reviews.length + 1);
 
             await souvenir.update({ rating }, { transaction });
