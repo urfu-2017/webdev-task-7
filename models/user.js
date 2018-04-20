@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
             autoIncrement: true
         },
         login: {
-            type: DataTypes.TXET,
+            type: DataTypes.TEXT,
             unique: true
         }
     });
