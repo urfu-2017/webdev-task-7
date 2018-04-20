@@ -23,7 +23,7 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: 'tags',
+                model: 'tag',
                 key: 'id'
             }
         }
