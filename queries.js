@@ -60,7 +60,7 @@ class Queries {
 
     getDisscusedSouvenirs(n) {
         return this.souvenir.findAll({
-            attributes: ['name', 'image', 'price', 'rating'],
+            attributes: ['id', 'name', 'image', 'price', 'rating'],
             include: { model: this.review },
             group: 'souvenirs.id',
             having: this.sequelize.where(
