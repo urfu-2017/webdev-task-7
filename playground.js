@@ -10,8 +10,8 @@ const Queries = require('./queries');
 
     try {
         // Здесь можно делать запросы, чтобы проверять, что они правильно работают
-        const result = await queries.searchSouvenirs('рыба');
-        // const result = await queries.getSouvenirsByTag('ракушка');
+        // const result = await queries.searchSouvenirs('рыба');
+        const result = await queries.getSouvenirsByTag('ракушка');
         // const result = await queries.getSouvenirsCount({ country: 'Кипр', rating: 3, price: 9 });
         // const result = await queries.deleteOutOfStockSouvenirs();
         // const result = await queries.getDisscusedSouvenirs(3);
