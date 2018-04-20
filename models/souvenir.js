@@ -13,16 +13,23 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: 0,
             validate: { min: 0 }
         },
-        image: DataTypes.STRING,
+        image: DataTypes.TEXT,
         isRecent: DataTypes.BOOLEAN,
-        name: DataTypes.STRING,
+        name: DataTypes.TEXT,
         price: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DOUBLE,
             validate: { min: 0 }
         },
         rating: {
             type: DataTypes.DOUBLE,
             validate: { min: 0, max: 5 }
+        },
+        countryId: {
+            type: DataTypes.INTEGER,
+            references: {
+                model: 'country',
+                key: 'id'
+            }
         }
     }, {
         indexes: [{

@@ -24,7 +24,7 @@ class Queries {
 
     getTopRatingSouvenirs(n) {
         return this.souvenir.findAll({
-            order: ['rating', 'DESC'],
+            order: [['rating', 'DESC']],
             limit: n
         });
     }
@@ -62,9 +62,9 @@ class Queries {
         return this.souvenir.findAll({
             attributes: ['name', 'image', 'price', 'rating'],
             include: { model: this.review },
-            group: 'souvenirs.id',
+            group: 'souvenir.id',
             having: this.sequelize.where(
-                this.sequelize.fn('COUNT', this.sequelize.col('reviews.id')), '>=', n
+                this.sequelize.fn('COUNT', this.sequelize.col('review.id')), '>=', n
             )
         });
     }
@@ -95,8 +95,8 @@ class Queries {
     }
 
     getCartSum(login) {
-        return this.cart.sum('souvenirs.price', {
-            group: 'carts.id',
+        return this.cart.sum('souvenir.price', {
+            group: 'cart.id',
             includeIgnoreAttributes: false,
             include: [
                 { model: this.souvenir },
