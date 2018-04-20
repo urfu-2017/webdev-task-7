@@ -61,7 +61,7 @@ class Queries {
 
     getDisscusedSouvenirs(n) {
         return this.souvenir.findAll({
-            attributes: ['id', 'name', 'image', 'price', 'rating'],
+            attributes: ['name', 'image', 'price', 'rating'],
             include: {
                 model: this.review,
                 attributes: []
@@ -87,7 +87,7 @@ class Queries {
             await souvenir.createReview({ userId: user.id, text, rating }, { transaction });
 
             const reviews = await souvenir.getReviews({ transaction });
-            rating = (souvenir.rating * reviews.length + rating) / (reviews.length + 1);
+            rating = (souvenir.rating * (reviews.length - 1) + rating) / (reviews.length);
 
             await souvenir.update({ rating }, { transaction });
         });
