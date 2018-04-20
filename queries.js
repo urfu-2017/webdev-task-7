@@ -82,7 +82,7 @@ class Queries {
                 attributes: []
             }],
             group: col('souvenir.id'),
-            having: where(fn('COUNT', col('review.id')), '>=', n)
+            having: where(fn('COUNT', col('reviews.id')), '>=', n)
         });
     }
 
