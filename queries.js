@@ -72,7 +72,7 @@ class Queries {
 
     getDisscusedSouvenirs(n) {
         // Данный метод должен возвращать все сувениры, имеющих >= n отзывов.
-        // Кроме того, в ответе должны быть только поля name, image, price и rating.
+        // Кроме того, в ответе должны быть только поля id, name, image, price и rating.
         const { fn, where, col } = this.models.sequelize;
 
         return this.models.Souvenir.findAll({
