@@ -1,7 +1,7 @@
 'use strict';
 
-module.exports = (sequelize, DataTypes) => {
-    return sequelize.define('tag', {
+module.exports = function (sequelize, DataTypes) {
+    return sequelize.define('countries', {
         id: {
             type: DataTypes.INTEGER,
             allowNull: false,
@@ -21,6 +21,6 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         }
     }, {
-        tableName: 'tags'
+        tableName: 'countries'
     });
 };

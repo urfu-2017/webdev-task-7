@@ -1,16 +1,12 @@
 'use strict';
 
-module.exports = (sequelize, DataTypes) => {
-    return sequelize.define('country', {
+module.exports = function (sequelize, DataTypes) {
+    return sequelize.define('carts', {
         id: {
             type: DataTypes.INTEGER,
             allowNull: false,
             primaryKey: true,
             autoIncrement: true
-        },
-        name: {
-            type: DataTypes.TEXT,
-            allowNull: true
         },
         createdAt: {
             type: DataTypes.DATE,
@@ -19,8 +15,16 @@ module.exports = (sequelize, DataTypes) => {
         updatedAt: {
             type: DataTypes.DATE,
             allowNull: false
+        },
+        userId: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+            references: {
+                model: 'users',
+                key: 'id'
+            }
         }
     }, {
-        tableName: 'countries'
+        tableName: 'carts'
     });
 };

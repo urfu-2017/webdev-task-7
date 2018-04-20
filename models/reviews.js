@@ -1,7 +1,7 @@
 'use strict';
 
-module.exports = (sequelize, DataTypes) => {
-    return sequelize.define('review', {
+module.exports = function (sequelize, DataTypes) {
+    return sequelize.define('reviews', {
         id: {
             type: DataTypes.INTEGER,
             allowNull: false,
@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             allowNull: true,
             references: {
-                model: 'souvenir',
+                model: 'souvenirs',
                 key: 'id'
             }
         },
@@ -41,7 +41,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             allowNull: true,
             references: {
-                model: 'user',
+                model: 'users',
                 key: 'id'
             }
         }

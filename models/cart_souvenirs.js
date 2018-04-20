@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = function (sequelize, DataTypes) {
-    return sequelize.define('souvenir_tags', {
+    return sequelize.define('cart_souvenirs', {
         createdAt: {
             type: DataTypes.DATE,
             allowNull: false
@@ -10,24 +10,24 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.DATE,
             allowNull: false
         },
-        souvenirId: {
+        cartId: {
             type: DataTypes.INTEGER,
             allowNull: false,
             primaryKey: true,
             references: {
-                model: 'souvenir',
+                model: 'carts',
                 key: 'id'
             }
         },
-        tagId: {
+        souvenirId: {
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: 'tag',
+                model: 'souvenirs',
                 key: 'id'
             }
         }
     }, {
-        tableName: 'souvenir_tags'
+        tableName: 'cart_souvenirs'
     });
 };
