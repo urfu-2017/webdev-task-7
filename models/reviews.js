@@ -21,14 +21,6 @@ module.exports = function (sequelize, DataTypes) {
             allowNull: true,
             defaultValue: false
         },
-        createdAt: {
-            type: DataTypes.DATE,
-            allowNull: false
-        },
-        updatedAt: {
-            type: DataTypes.DATE,
-            allowNull: false
-        },
         souvenirId: {
             type: DataTypes.INTEGER,
             allowNull: true,

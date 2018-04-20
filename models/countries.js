@@ -11,14 +11,6 @@ module.exports = function (sequelize, DataTypes) {
         name: {
             type: DataTypes.TEXT,
             allowNull: true
-        },
-        createdAt: {
-            type: DataTypes.DATE,
-            allowNull: false
-        },
-        updatedAt: {
-            type: DataTypes.DATE,
-            allowNull: false
         }
     }, {
         tableName: 'countries'

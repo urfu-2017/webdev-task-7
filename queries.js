@@ -81,6 +81,7 @@ class Queries {
                 model: this.models.Review,
                 attributes: []
             }],
+            order: ['id'],
             group: col('souvenirs.id'),
             having: where(fn('COUNT', col('reviews.id')), '>=', n)
         });
@@ -104,24 +105,29 @@ class Queries {
         const { sequelize, User, Souvenir } = this.models;
         const user = await User.findOne({ where: { login } });
         const souvenir = await Souvenir.findById(souvenirId);
-        const transaction = await sequelize.transaction();
-        await souvenir.createReview({ userId: user.id, text, rating }, { transaction });
 
-        const reviews = await souvenir.getReviews({ attributes: ['rating'] }, { transaction });
-        const sum = reviews.map(x => x.rating).reduce((x, y) => x + y, 0);
-        souvenir.rating = sum === 0 ? 0 : sum / reviews.length;
-        await souvenir.save({ transaction });
+        await sequelize.transaction(async transaction => {
+            await souvenir.createReview({ userId: user.id, text, rating }, { transaction });
+            const reviews = await souvenir.getReviews({ attributes: ['rating'], transaction });
+            await souvenir.update({
+                rating: reviews.map(x => x.rating).reduce((x, y) => x + y, 0) / reviews.length
+            }, { transaction });
+        });
     }
 
     async getCartSum(login) {
         // Данный метод должен считать общую стоимость корзины пользователя login
         // У пользователя может быть только одна корзина, поэтому это тоже можно отразить
         // в модели.
-        const user = await this.models.User.findOne({ where: { login } });
-        const cart = await user.getCart();
-        const souvenirs = await cart.getSouvenirs({ attributes: ['price'] });
+        const { User, Souvenir, Cart } = this.models;
 
-        return souvenirs.map(x => x.price).reduce((x, y) => x + y, 0);
+        return Cart.sum('souvenirs.price', {
+            includeIgnoreAttributes: false,
+            include: [
+                { model: User, where: { login } },
+                { model: Souvenir }],
+            group: 'carts.id'
+        });
     }
 }
 
