@@ -34,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
         timestamps: true,
         indexes: [
             {
-                fields: ['country', 'rating', 'price']
+                fields: ['countryId', 'rating', 'price']
             }
         ]
     });
