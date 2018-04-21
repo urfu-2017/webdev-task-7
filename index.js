@@ -21,6 +21,10 @@ const Cart = sequelize.import('models/cart');
 const User = sequelize.import('models/user');
 
 // Ваши relations между моделями :)
+Souvenir.belongsTo(Country);
+Review.belongsTo(Souvenir);
+Review.belongsTo(User);
+Cart.belongsTo(User);
 
 module.exports.sequelize = sequelize;
 
