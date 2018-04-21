@@ -2,7 +2,7 @@
 
 class Queries {
     constructor(models) {
-        this.sequelize = models.sequelize;
+        this._sequelize = models.sequelize;
         this._Op = models.sequelize.Op;
         this._Cart = models.Cart;
         this._Country = models.Country;
@@ -84,7 +84,7 @@ class Queries {
     getDisscusedSouvenirs(n) {
         // Данный метод должен возвращать все сувениры, имеющих >= n отзывов.
         // Кроме того, в ответе должны быть только поля id, name, image, price и rating.
-        const sequelize = this.sequelize;
+        const sequelize = this._sequelize;
 
         return this._Souvenir.findAll({
             attributes: ['name', 'image', 'price', 'rating'],
@@ -94,7 +94,7 @@ class Queries {
             },
             order: ['id'],
             group: 'souvenirs.id',
-            having: sequelize.where(sequelize.fn('COUNT', sequelize.col('reviews.id')), '>=', n)
+            having: sequelize.where(sequelize.fn('COUNT', 'reviews.id'), '>=', n)
         });
     }
 
@@ -115,7 +115,7 @@ class Queries {
         // содержит login, text, rating - из аргументов.
         // Обратите внимание, что при добавлении отзыва рейтинг сувенира должен быть пересчитан,
         // и всё это должно происходить за одну транзакцию (!).
-        return this.sequelize.transaction(async t => {
+        return this._sequelize.transaction(async t => {
             const user = await this._User.findOne({
                 where: {
                     login
