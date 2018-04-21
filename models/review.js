@@ -9,9 +9,21 @@ module.exports = (sequelize, DataTypes) => {
             autoIncrement: true
         },
         text: DataTypes.TEXT,
-        rating: DataTypes.INTEGER,
-        isApproved: DataTypes.BOOLEAN,
-        souvenirId: DataTypes.INTEGER,
+        rating: {
+            type: DataTypes.INTEGER,
+            validate: { min: 0, max: 5 }
+        },
+        isApproved: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
+        },
+        souvenirId: {
+            type: DataTypes.INTEGER,
+            references: {
+                model: 'souvenirs',
+                key: 'id'
+            }
+        },
         userId: {
             type: DataTypes.INTEGER,
             references: {

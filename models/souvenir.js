@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = (sequelize, DataTypes) => {
-    return sequelize.define('souvenir', {
+    return sequelize.define('souvenirs', {
         id: {
             type: DataTypes.INTEGER,
             allowNull: false,
@@ -10,9 +10,18 @@ module.exports = (sequelize, DataTypes) => {
         },
         name: DataTypes.TEXT,
         image: DataTypes.TEXT,
-        price: DataTypes.DOUBLE,
-        rating: DataTypes.DOUBLE,
-        amount: DataTypes.INTEGER,
+        price: {
+            type: DataTypes.DOUBLE,
+            validate: { min: 0 }
+        },
+        rating: {
+            type: DataTypes.DOUBLE,
+            validate: { min: 0, max: 5 }
+        },
+        amount: {
+            type: DataTypes.INTEGER,
+            validate: { min: 0 }
+        },
         isRecent: DataTypes.BOOLEAN,
         countryId: {
             type: DataTypes.INTEGER,

@@ -84,12 +84,18 @@ class Queries {
     getDisscusedSouvenirs(n) {
         // Данный метод должен возвращать все сувениры, имеющих >= n отзывов.
         // Кроме того, в ответе должны быть только поля id, name, image, price и rating.
+        const sequelize = this.sequelize;
+
         return this._Souvenir.findAll({
+            attributes: ['name', 'image', 'price', 'rating'],
             include: {
-                model: this._Review
-            }
-        }).then(souvenirs =>
-            souvenirs.filter(souvenir => souvenir.reviews.length >= n));
+                model: this._Review,
+                attributes: []
+            },
+            order: ['id'],
+            group: 'souvenirs.id',
+            having: sequelize.where(sequelize.fn('COUNT', sequelize.col('reviews.id')), '>=', n)
+        });
     }
 
     deleteOutOfStockSouvenirs() {
@@ -142,22 +148,17 @@ class Queries {
         // Данный метод должен считать общую стоимость корзины пользователя login
         // У пользователя может быть только одна корзина, поэтому это тоже можно отразить
         // в модели.
-        const user = await this._User.findOne({
-            where: {
-                login
-            },
-            include: {
-                model: this._Cart,
-                include: {
-                    model: this._Souvenir
-                }
-            }
+        const cart = await this._Cart.findOne({
+            include: [
+                { model: this._User, where: { login } },
+                { model: this._Souvenir }
+            ]
         });
 
-        const totalPrice = user.cart.souvenirs.reduce((previousValue, currentSouvenir) =>
+        const totalPrice = cart.souvenirs.reduce((previousValue, currentSouvenir) =>
             previousValue + currentSouvenir.price, 0);
 
-        return totalPrice;
+        return totalPrice.toFixed(10);
     }
 }
 
