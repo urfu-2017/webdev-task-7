@@ -12,6 +12,12 @@ module.exports = (sequelize, DataTypes) => {
         rating: DataTypes.INTEGER,
         isApproved: DataTypes.BOOLEAN,
         souvenirId: DataTypes.INTEGER,
-        userId: DataTypes.INTEGER
+        userId: {
+            type: DataTypes.INTEGER,
+            references: {
+                model: 'user',
+                key: 'id'
+            }
+        }
     });
 };

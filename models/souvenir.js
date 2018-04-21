@@ -14,8 +14,12 @@ module.exports = (sequelize, DataTypes) => {
         rating: DataTypes.DOUBLE,
         amount: DataTypes.INTEGER,
         isRecent: DataTypes.BOOLEAN,
-        createdAt: DataTypes.DATE,
-        updatedAt: DataTypes.DATE,
-        countryId: DataTypes.INTEGER
+        countryId: {
+            type: DataTypes.INTEGER,
+            references: {
+                model: 'country',
+                key: 'id'
+            }
+        }
     });
 };

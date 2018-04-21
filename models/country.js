@@ -8,8 +8,6 @@ module.exports = (sequelize, DataTypes) => {
             primaryKey: true,
             autoIncrement: true
         },
-        name: DataTypes.TEXT,
-        createdAt: DataTypes.DATE,
-        updatedAt: DataTypes.DATE
+        name: DataTypes.TEXT
     });
 };

@@ -11,8 +11,6 @@ module.exports = (sequelize, DataTypes) => {
         login: {
             type: DataTypes.TEXT,
             unique: true
-        },
-        createdAt: DataTypes.DATE,
-        updatedAt: DataTypes.DATE
+        }
     });
 };
