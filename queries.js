@@ -11,7 +11,7 @@ class Queries {
      * @returns {Promise}
      */
     getAllSouvenirs() {
-        return makePlain(this.models.Souvenir.findAll());
+        return this.models.Souvenir.findAll();
     }
 
     /**
