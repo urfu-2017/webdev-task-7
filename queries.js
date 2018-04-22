@@ -11,19 +11,7 @@ class Queries {
      * @returns {Promise}
      */
     getAllSouvenirs() {
-        return makePlain(this.models.SouvenirTag.findAll(
-            {
-                include: [
-                    {
-                        model: this.models.Souvenir
-                    },
-                    {
-                        model: this.models.Tag
-                    }
-                ],
-                attributes: { exclude: ['souvenirId', 'tagId'] }
-            }
-        ));
+        return makePlain(this.models.Souvenir.findAll());
     }
 
     /**

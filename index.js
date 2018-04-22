@@ -19,9 +19,6 @@ const Review = sequelize.import('models/review');
 const Souvenir = sequelize.import('models/souvenir');
 const Cart = sequelize.import('models/cart');
 const User = sequelize.import('models/user');
-const SouvenirTag = sequelize.import('models/souvenirTag');
-const CartSouvenir = sequelize.import('models/cartSouvenir');
-
 
 Cart.belongsTo(User, {
     foreignKey: 'userId',
@@ -30,16 +27,6 @@ Cart.belongsTo(User, {
 
 Souvenir.belongsTo(Country, {
     foreignKey: 'countryId',
-    targetKey: 'id'
-});
-
-SouvenirTag.belongsTo(Souvenir, {
-    foreignKey: 'souvenirId',
-    targetKey: 'id'
-});
-
-SouvenirTag.belongsTo(Tag, {
-    foreignKey: 'tagId',
     targetKey: 'id'
 });
 
@@ -53,16 +40,6 @@ Review.belongsTo(User, {
     targetKey: 'id'
 });
 
-CartSouvenir.belongsTo(Cart, {
-    foreignKey: 'cartId',
-    targetKey: 'id'
-});
-
-CartSouvenir.belongsTo(Souvenir, {
-    foreignKey: 'souvenirId',
-    targetKey: 'id'
-});
-
 module.exports.sequelize = sequelize;
 
 module.exports.Country = Country;
@@ -71,5 +48,3 @@ module.exports.Review = Review;
 module.exports.Souvenir = Souvenir;
 module.exports.Cart = Cart;
 module.exports.User = User;
-module.exports.SouvenirTag = SouvenirTag;
-module.exports.CartSouvenir = CartSouvenir;
