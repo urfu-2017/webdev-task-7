@@ -5,6 +5,6 @@ module.exports = (sequelize, DataTypes) => sequelize.define('reviews', {
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE,
     text: DataTypes.TEXT,
-    isApproved: DataTypes.BOOLEAN,
+    isApproved: { type: DataTypes.BOOLEAN, defaultValue: false },
     rating: DataTypes.DOUBLE
 });
