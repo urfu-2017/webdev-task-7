@@ -2,17 +2,26 @@
 
 class Queries {
     constructor(models) {
-        // Что-нибудь инициализируем в конструкторе
+        this.sequelize = models.sequelize;
+        this.op = models.sequelize.Op;
+        this.cart = models.Cart;
+        this.country = models.Country;
+        this.review = models.Review;
+        this.souvenir = models.Souvenir;
+        this.tag = models.Tag;
+        this.user = models.User;
     }
 
     // Далее идут методы, которые вам необходимо реализовать:
 
     getAllSouvenirs() {
-        // Данный метод должен возвращать все сувениры.
+        return this.souvenir.findAll();
     }
 
     getCheapSouvenirs(price) {
-        // Данный метод должен возвращать все сувениры, цена которых меньше или равна price.
+        return this.souvenir.findAll({
+            where: { price: { [this.op.lte]: price } }
+        });
     }
 
     getTopRatingSouvenirs(n) {
