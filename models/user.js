@@ -1,5 +1,17 @@
 'use strict';
 
 module.exports = (sequelize, DataTypes) => {
-    // Ваша модель юзера
+    return sequelize.define('user', {
+        id: { type: DataTypes.INTEGER, allowNull: false, unique: true, primaryKey: true },
+        login: { type: DataTypes.TEXT, unique: true },
+        createdAt: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW },
+        updatedAt: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW }
+    });
 };
+
+// CREATE TABLE users (
+//     id integer NOT NULL,
+//     login text,
+//     "createdAt" timestamp with time zone NOT NULL,
+//     "updatedAt" timestamp with time zone NOT NULL
+// );

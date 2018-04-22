@@ -1,9 +1,9 @@
 'use strict';
 
 require('dotenv').config({ path: `${__dirname}/.env` });
-const Sequalize = require('sequelize');
+const Sequelize = require('sequelize');
 
-const sequelize = new Sequalize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {
+const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {
     host: process.env.DB_HOST,
     dialect: 'postgres',
     operatorsAliases: false, // если вы будете делать запросы без deprecated алиасов
@@ -13,6 +13,15 @@ const sequelize = new Sequalize(process.env.DB_NAME, process.env.DB_USER, proces
     }
 });
 
+// sequelize
+//     .authenticate()
+//     .then(() => {
+//         console.info('Connection has been established successfully.');
+//     })
+//     .catch(err => {
+//         console.error('Unable to connect to the database:', err);
+//     });
+
 const Country = sequelize.import('models/country');
 const Tag = sequelize.import('models/tag');
 const Review = sequelize.import('models/review');
@@ -21,6 +30,10 @@ const Cart = sequelize.import('models/cart');
 const User = sequelize.import('models/user');
 
 // Ваши relations между моделями :)
+User.hasMany(Review);
+User.hasOne(Cart);
+Review.belongsTo(Souvenir);
+Souvenir.belongsTo(Country);
 
 module.exports.sequelize = sequelize;
 
