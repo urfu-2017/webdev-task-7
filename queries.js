@@ -101,8 +101,9 @@ class Queries {
             attributes: ['souvenir.id'],
             include: {
                 model: this.Souvenir,
-                attributes: ['id', 'name', 'image', 'price', 'rating']
+                attributes: ['name', 'image', 'price', 'rating']
             },
+            order: Sequelize.col('souvenir.id'),
             group: ['souvenir.id'],
             having: Sequelize.where(Sequelize.fn('COUNT', Sequelize.col('souvenir.id')), '>=', n)
         }).then(souvenirs => souvenirs.map(souvenir => souvenir.souvenir));
@@ -154,18 +155,18 @@ class Queries {
         // Данный метод должен считать общую стоимость корзины пользователя login
         // У пользователя может быть только одна корзина, поэтому это тоже можно отразить
         // в модели.
-        return this.User.findOne({
-            attributes: [],
-            where: { login },
-            include: {
-                model: this.Cart,
-                include: {
-                    model: this.Souvenir,
-                    attributes: ['price']
-                }
-            }
-        }).then(result =>
-            result.cart.souvenirs.map(souvenir => souvenir.price).reduce((a, b) => a + b, 0));
+        return this.Cart.sum('souvenirs.price', {
+            includeIgnoreAttributes: false,
+            include: [{
+                model: this.User,
+                where: { login },
+                attributes: []
+            },
+            {
+                model: this.Souvenir,
+                attributes: []
+            }]
+        });
     }
 }
 
