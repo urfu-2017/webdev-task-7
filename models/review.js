@@ -7,7 +7,10 @@ module.exports = (sequelize, DataTypes) => {
             primaryKey: true,
             autoIncrement: true
         },
-        isApproved: DataTypes.BOOLEAN,
+        isApproved: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
+        },
         rating: DataTypes.DOUBLE,
         text: DataTypes.STRING,
         souvenirId: {
