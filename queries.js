@@ -101,7 +101,7 @@ class Queries {
             attributes: ['souvenir.id'],
             include: {
                 model: this.Souvenir,
-                attributes: ['name', 'image', 'price', 'rating']
+                attributes: ['id', 'name', 'image', 'price', 'rating']
             },
             group: ['souvenir.id'],
             having: Sequelize.where(Sequelize.fn('COUNT', Sequelize.col('souvenir.id')), '>=', n)
