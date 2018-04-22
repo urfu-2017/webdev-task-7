@@ -25,6 +25,8 @@ Souvenir.belongsTo(Country);
 Review.belongsTo(Souvenir);
 Review.belongsTo(User);
 Cart.belongsTo(User);
+Souvenir.belongsToMany(Tag, { through: 'SouvenirTags' });
+Cart.belongsToMany(Souvenir, { through: 'CartSouvenirs' });
 
 module.exports.sequelize = sequelize;
 

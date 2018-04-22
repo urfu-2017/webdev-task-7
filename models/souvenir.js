@@ -1,7 +1,7 @@
 'use strict';
 
-module.exports = (sequelize, DataTypes) => sequelize.define('souvenir', {
-    id: DataTypes.INTEGER,
+module.exports = (sequelize, DataTypes) => sequelize.define('souvenirs', {
+    id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE,
     name: DataTypes.TEXT,
@@ -10,4 +10,4 @@ module.exports = (sequelize, DataTypes) => sequelize.define('souvenir', {
     isRecent: DataTypes.BOOLEAN,
     price: DataTypes.DOUBLE,
     rating: DataTypes.DOUBLE
-});
+}, { indexes: [{ fields: ['rating', 'price'] }] });
