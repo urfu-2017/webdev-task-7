@@ -22,9 +22,17 @@ const User = sequelize.import('models/user');
 
 // Ваши relations между моделями :)
 Souvenir.belongsTo(Country);
+Country.hasMany(Souvenir);
+
 Review.belongsTo(Souvenir);
+Souvenir.hasMany(Review);
+
 Review.belongsTo(User);
+User.hasMany(Review);
+
 Cart.belongsTo(User);
+User.hasMany(Cart);
+
 Souvenir.belongsToMany(Tag, { through: 'SouvenirTags' });
 Cart.belongsToMany(Souvenir, { through: 'CartSouvenirs' });
 
