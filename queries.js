@@ -2,29 +2,99 @@
 
 class Queries {
     constructor(models) {
-        // Что-нибудь инициализируем в конструкторе
+        this.models = models;
+        this.Op = models.sequelize.Op;
     }
 
-    // Далее идут методы, которые вам необходимо реализовать:
-
+    /**
+     * Возвращает все сувениры.
+     * @returns {Promise}
+     */
     getAllSouvenirs() {
-        // Данный метод должен возвращать все сувениры.
+        return makePlain(this.models.SouvenirTag.findAll(
+            {
+                include: [
+                    {
+                        model: this.models.Souvenir
+                    },
+                    {
+                        model: this.models.Tag
+                    }
+                ],
+                attributes: { exclude: ['souvenirId', 'tagId'] }
+            }
+        ));
     }
 
+    /**
+     * Возвращает все сувениры, цена которых меньше или равна price.
+     * @param {Number} price
+     * @returns {Promise}
+     */
     getCheapSouvenirs(price) {
-        // Данный метод должен возвращать все сувениры, цена которых меньше или равна price.
+        return makePlain(this.models.SouvenirTag.findAll(
+            {
+                include: [
+                    {
+                        model: this.models.Souvenir,
+                        where: {
+                            price: {
+                                [this.Op.lte]: price
+                            }
+                        }
+                    },
+                    { model: this.models.Tag }
+                ],
+                attributes: { exclude: ['souvenirId', 'tagId'] }
+            }
+        ));
     }
 
+    /**
+     * Возвращает топ n сувениров с самым большим рейтингом.
+     * @param {Number} n
+     * @returns {Promise}
+     */
     getTopRatingSouvenirs(n) {
-        // Данный метод должен возвращать топ n сувениров с самым большим рейтингом.
+        return makePlain(this.models.SouvenirTag.findAll(
+            {
+                include: [
+                    { model: this.models.Souvenir },
+                    { model: this.models.Tag }
+                ],
+                attributes: { exclude: ['souvenirId', 'tagId'] },
+                order: [[this.models.Souvenir, 'rating', 'DESC']],
+                limit: n
+            }
+        ));
     }
 
+    // /**
+    //  * Возвращает все сувениры, в тегах которых есть tag.
+    //  * В ответе только поля id, name, image, price и rating.
+    //  * @param {String} tag
+    //  * @returns {Promise}
+    //  */
     getSouvenirsByTag(tag) {
-        // Данный метод должен возвращать все сувениры, в тегах которых есть tag.
-        // Кроме того, в ответе должны быть только поля id, name, image, price и rating.
+        return tag;
+        // return makePlain(this.models.SouvenirTag.findAll(
+        //     {
+        //         include: [
+        //             { model: this.models.Souvenir },
+        //             {
+        //                 model: this.models.Tag,
+        //                 where: {
+        //
+        //                 }
+        //             }
+        //         ],
+        //         attributes: { exclude: ['souvenirId', 'tagId'] }
+        //     }
+        // ));
     }
 
     getSouvenirsCount({ country, rating, price }) {
+        return { country, rating, price };
         // Данный метод должен возвращать количество сувениров,
         // из страны country, с рейтингом больше или равной rating,
         // и ценой меньше или равной price.
@@ -34,11 +104,13 @@ class Queries {
     }
 
     searchSouvenirs(substring) {
+        return substring;
         // Данный метод должен возвращать все сувениры, в название которых входит
         // подстрока substring. Поиск должен быть регистронезависимым.
     }
 
     getDisscusedSouvenirs(n) {
+        return n;
         // Данный метод должен возвращать все сувениры, имеющих >= n отзывов.
         // Кроме того, в ответе должны быть только поля name, image, price и rating.
     }
@@ -51,6 +123,7 @@ class Queries {
     }
 
     addReview(souvenirId, { login, text, rating }) {
+        return [souvenirId, { login, text, rating }];
         // Данный метод должен добавлять отзыв к сувениру souvenirId
         // содержит login, text, rating - из аргументов.
         // Обратите внимание, что при добавлении отзыва рейтинг сувенира должен быть пересчитан,
@@ -58,10 +131,19 @@ class Queries {
     }
 
     getCartSum(login) {
+        return login;
         // Данный метод должен считать общую стоимость корзины пользователя login
         // У пользователя может быть только одна корзина, поэтому это тоже можно отразить
         // в модели.
     }
+}
+
+/**
+ * @param {Promise} response
+ * @returns {Promise}
+ */
+async function makePlain(response) {
+    return (await response).map(el => el.get({ plain: true }));
 }
 
 module.exports = Queries;

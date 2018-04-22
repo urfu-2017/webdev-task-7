@@ -1,16 +1,17 @@
 'use strict';
 
 module.exports = (sequelize, DataTypes) => {
-    return sequelize.define('country',
+    return sequelize.define('souvenir_tags',
         {
-            id: {
+            souvenirId: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
-                primaryKey: true,
-                autoIncrement: true
+                primaryKey: true
             },
-            name: {
-                type: DataTypes.TEXT
+            tagId: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                primaryKey: true
             }
         },
         {

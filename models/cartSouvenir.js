@@ -1,16 +1,17 @@
 'use strict';
 
 module.exports = (sequelize, DataTypes) => {
-    return sequelize.define('country',
+    return sequelize.define('cart_souvenirs',
         {
-            id: {
+            cartId: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
-                primaryKey: true,
-                autoIncrement: true
+                primaryKey: true
             },
-            name: {
-                type: DataTypes.TEXT
+            souvenirId: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                primaryKey: true
             }
         },
         {
