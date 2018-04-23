@@ -20,9 +20,8 @@ module.exports = (sequelize, DataTypes) => {
         },
         isApproved: {
             type: DataTypes.BOOLEAN,
-            default: false,
-            field: 'isApproved',
-            allowNull: false
+            defaultValue: false,
+            field: 'isApproved'
         },
         souvenirId: {
             type: DataTypes.INTEGER,
