@@ -37,7 +37,6 @@ User.hasMany(Cart);
 Review.belongsTo(User);
 User.hasMany(Review);
 
-Review.belongsTo(Souvenir);
 Souvenir.hasMany(Review);
 
 Souvenir.belongsTo(Country);
