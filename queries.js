@@ -82,12 +82,18 @@ class Queries {
         });
     }
 
-    // addReview(souvenirId, { login, text, rating }) {
-    //     // Данный метод должен добавлять отзыв к сувениру souvenirId
-    //     // содержит login, text, rating - из аргументов.
-    //     // Обратите внимание, что при добавлении отзыва рейтинг сувенира должен быть пересчитан,
-    //     // и всё это должно происходить за одну транзакцию (!).
-    // }
+    async  addReview(souvenirId, { login, text, rating }) {
+        const user = await this.user.findOne({ where: { login } });
+        const souvenir = await this.souvenir.findById(souvenirId);
+
+
+        return this.sequelize.transaction(async transaction => {
+            await souvenir.createReview({ userId: user.id, text, rating }, { transaction });
+            const reviews = await souvenir.getReviews({ transaction });
+            await souvenir.update({ rating: (souvenir.rating * (reviews.length - 1) + rating) /
+            (reviews.length) }, { transaction });
+        });
+    }
 
     getCartSum(login) {
         return this.cart.sum('souvenirs.price', {
