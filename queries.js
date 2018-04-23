@@ -22,18 +22,11 @@ class Queries {
     getCheapSouvenirs(price) {
         return this.models.Souvenir.findAll(
             {
-                include: [
-                    {
-                        model: this.models.Souvenir,
-                        where: {
-                            price: {
-                                [this.Op.lte]: price
-                            }
-                        }
-                    },
-                    { model: this.models.Tag }
-                ],
-                attributes: { exclude: ['souvenirId', 'tagId'] }
+                where: {
+                    price: {
+                        [this.Op.lte]: price
+                    }
+                }
             }
         );
     }
