@@ -86,31 +86,27 @@ class Queries {
     }
 
     async addReview(souvenirId, { login, text, rating }) {
-        const transaction = t =>
-            Promise.all([
+        const transaction = async t => {
+            const [souvenir, user] = await Promise.all([
                 this.Souvenir.findById(souvenirId, { transaction: t }),
                 this.User.findOne({ where: { login } }, { transaction: t })
-            ])
-                .then(
-                    ([souvenir, user]) => [souvenir, user, souvenir.getReviews({ transaction: t })]
-                )
-                .then(
-                    ([souvenir, user, reviews]) => {
-                        const review = {
-                            text,
-                            rating,
-                            souvenirId,
-                            userId: user.id
-                        };
-                        const newRating = reviews
-                            .reduce((acc, curr) => acc + curr.rating, rating) /
-                                (reviews.length + 1);
+            ]);
 
-                        return Promise.all([
-                            souvenir.update({ rating: newRating }, { transaction: t }),
-                            souvenir.createReview(review, { transaction: t })
-                        ]);
-                    });
+            const reviews = await souvenir.getReviews({ transaction: t });
+            const review = {
+                text,
+                rating,
+                souvenirId,
+                userId: user.id
+            };
+            const reviewsCount = reviews.length;
+            const newRating = (souvenir.rating * reviewsCount + rating) / (reviewsCount + 1);
+
+            return Promise.all([
+                souvenir.update({ rating: newRating }, { transaction: t }),
+                souvenir.createReview(review, { transaction: t })
+            ]);
+        };
 
         return this.sequelize.transaction(transaction);
     }
