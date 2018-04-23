@@ -178,9 +178,9 @@ class Queries {
                     ]
                 }
             );
-            let newRating = souvenir.reviews.reduce((accumulator, review) => {
+            let newRating = (souvenir.reviews.reduce((accumulator, review) => {
                 return accumulator + review.dataValues.rating;
-            }, 0) / souvenir.reviews.length;
+            }, 0) + rating) / souvenir.reviews.length;
             newRating = Number(newRating.toPrecision(SIGNS_DOUBLE_PRECISION));
             souvenir.update(
                 { rating: newRating },

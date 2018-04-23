@@ -10,9 +10,8 @@ const Queries = require('./queries');
 
     try {
         // Здесь можно делать запросы, чтобы проверять, что они правильно работают
-        // const result = await queries.addReview(1, { login: 'batgirl', text: 'end', rating: 5 });
+        const result = await queries.addReview(1, { login: 'batgirl', text: 'start', rating: 100500 });
         // const result = await queries.getDisscusedSouvenirs(0);
-        const result = await queries.getCartSum('batman');
 
         console.info(result);
     } catch (error) {
