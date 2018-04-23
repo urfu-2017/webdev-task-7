@@ -89,7 +89,7 @@ class Queries {
         return this.sequelize.transaction(async transaction => {
             await souvenir.createReview({ userId: user.id, text, rating }, { transaction });
             const reviews = await souvenir.getReviews({ transaction });
-            rating = (souvenir.rating * (reviews.length - 1) + rating)/(reviews.length);
+            rating = (souvenir.rating * (reviews.length - 1) + rating) / (reviews.length);
             await souvenir.update({ rating }, { transaction });
         });
     }
