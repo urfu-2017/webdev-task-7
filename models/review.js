@@ -23,6 +23,8 @@ module.exports = (sequelize, DataTypes) => {
                 model: 'users',
                 key: 'id'
             }
-        }
+        },
+        isApproved: DataTypes.BOOLEAN,
+        text: DataTypes.TEXT
     });
 };

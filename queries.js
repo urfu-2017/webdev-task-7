@@ -3,6 +3,7 @@
 
 class Queries {
     constructor(models) {
+        this.Cart = models.Cart;
         this.Tag = models.Tag;
         this.User = models.User;
         this.Country = models.Country;
@@ -121,11 +122,18 @@ class Queries {
         });
     }
 
-    getCartSum(login) {
-        // Данный метод должен считать общую стоимость корзины пользователя login
-        // У пользователя может быть только одна корзина, поэтому это тоже можно отразить
-        // в модели.
-        return login;
+    async getCartSum(login) {
+        return await this.Cart.sum(
+            'souvenirs.price',
+            {
+                group: ['carts.id'],
+                includeIgnoreAttributes: false,
+                include: [
+                    { model: this.User, where: { login } },
+                    { model: this.Souvenir }
+                ]
+            }
+        );
     }
 }
 
