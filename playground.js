@@ -10,7 +10,7 @@ const Queries = require('./queries');
 
     try {
         // Здесь можно делать запросы, чтобы проверять, что они правильно работают
-        const result = await queries.getAllSouvenirs();
+        const result = await queries.getSouvenirsByTag('магнит');
 
         console.info(result);
     } catch (error) {
