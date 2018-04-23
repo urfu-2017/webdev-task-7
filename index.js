@@ -41,7 +41,10 @@ Review.belongsTo(User, {
     targetKey: 'id'
 });
 
-Souvenir.hasMany(Review);
+Souvenir.hasMany(Review, {
+    foreignKey: 'souvenirId',
+    targetKey: 'id'
+});
 
 Souvenir.belongsToMany(Tag, {
     through: SouvenirTag
