@@ -109,14 +109,17 @@ class Queries {
                 'price',
                 'rating'
             ],
-            order: ['id'],
+            include: {
+                model: this.Review,
+                attributes: []
+            },
+            group: 'souvenir.id',
             having: this.sequelize.where(
-                this.sequelize.fn(
-                    'COUNT',
-                    this.sequelize.col('reviews.id')
-                ),
-                '>=',
-                n
+                this.sequelize.literal(
+                    'COUNT(DISTINCT(reviews.id))',
+                ), {
+                    [this.Op.gte]: n
+                }
             )
         });
     }
@@ -142,44 +145,51 @@ class Queries {
 
         try {
             transaction = await this.sequelize.transaction();
-
+ 
             const souvenir = await this.Souvenir.findOne({
                 include: {
                     model: this.Review
                 },
-                souvenirId
+                where: {
+                    id: {
+                        [this.Op.eq]: souvenirId
+                    }
+                }
             }, {
                 transaction
             });
-
+ 
             const user = await this.User.findOne({
+                attributes: ['id'],
                 where: {
                     login
                 }
             }, {
                 transaction
             });
-
+ 
             const review = await this.Review.create({
-                userId: user.id,
+                userId: user.get('id'),
                 text,
                 rating,
-                souvenirId: souvenir.id
+                souvenirId: souvenir.get('id')
             }, {
                 transaction
             });
-
-            const souvenirsCount = souvenir.reviews.length;
-            const souvenirRating = (souvenir.rating * (souvenirsCount - 1) + rating) /
-                souvenirsCount;
-
+ 
+            const souvenirsAmount = souvenir.get('reviews').length;
+            const score = souvenir.get('rating') * souvenirsAmount + rating;
+            const count = souvenirsAmount + 1;
+            const souvenirRating = score / count;
+ 
             await souvenir.update({
                 rating: souvenirRating
             }, {
                 transaction
             });
-            await transaction.commit();
 
+            await transaction.commit();
+ 
             return review;
         } catch (err) {
             await transaction.rollback();
