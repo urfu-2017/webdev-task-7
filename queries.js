@@ -82,10 +82,9 @@ class Queries {
         });
     }
 
-    async  addReview(souvenirId, { login, text, rating }) {
+    async addReview(souvenirId, { login, text, rating }) {
         const user = await this.user.findOne({ where: { login } });
         const souvenir = await this.souvenir.findById(souvenirId);
-
 
         return this.sequelize.transaction(async transaction => {
             await souvenir.createReview({ userId: user.id, text, rating }, { transaction });
