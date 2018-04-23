@@ -5,18 +5,15 @@ module.exports = (sequelize, DataTypes) => {
         id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
-            allowNull: false
-        },
-        createdAt: {
-            type: DataTypes.DATE,
-            allowNull: false
-        },
-        updatedAt: {
-            type: DataTypes.DATE,
-            allowNull: false
+            allowNull: false,
+            autoIncrement: true
         },
         userId: {
-            type: DataTypes.INTEGER
+            type: DataTypes.INTEGER,
+            references: {
+                model: 'users',
+                key: 'id'
+            }
         }
     });
 };

@@ -4,31 +4,25 @@ module.exports = (sequelize, DataTypes) => {
     return sequelize.define('souvenirs', {
         id: {
             type: DataTypes.INTEGER,
+            allowNull: false,
             primaryKey: true,
-            allowNull: false
+            autoIncrement: true
         },
-        name: {
-            type: DataTypes.TEXT,
-            allowNull: false
-        },
-        image: DataTypes.TEXT,
-        price: {
-            type: DataTypes.DOUBLE,
-            allowNull: false
-        },
-        rating: DataTypes.DOUBLE,
         amount: {
             type: DataTypes.INTEGER,
-            default: 0
+            defaultValue: 0,
+            validate: { min: 0 }
         },
+        image: DataTypes.TEXT,
         isRecent: DataTypes.BOOLEAN,
-        createdAt: {
-            type: DataTypes.DATE,
-            allowNull: false
+        name: DataTypes.TEXT,
+        price: {
+            type: DataTypes.DOUBLE,
+            validate: { min: 0 }
         },
-        updatedAt: {
-            type: DataTypes.DATE,
-            allowNull: false
+        rating: {
+            type: DataTypes.DOUBLE,
+            validate: { min: 0, max: 5 }
         },
         countryId: {
             type: DataTypes.INTEGER,
