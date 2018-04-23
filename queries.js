@@ -42,14 +42,19 @@ class Queries {
         });
     }
 
-    // getSouvenirsCount({ country, rating, price }) {
-    //     // Данный метод должен возвращать количество сувениров,
-    //     // из страны country, с рейтингом больше или равной rating,
-    //     // и ценой меньше или равной price.
-    //
-    //     // Важно, чтобы метод работал очень быстро,
-    //     // поэтому учтите это при определении моделей (!).
-    // }
+    getSouvenirsCount({ country, rating, price }) {
+        return this.souvenir.count({
+            where: {
+                price: { [this.op.lte]: price },
+                rating: { [this.op.gte]: rating }
+            },
+            include: {
+                model: this.country,
+                where: { name: country },
+                attributes: []
+            }
+        });
+    }
 
     searchSouvenirs(substring) {
         return this.souvenir.findAll({
@@ -57,30 +62,43 @@ class Queries {
         });
     }
 
-    // getDisscusedSouvenirs(n) {
-    //     // Данный метод должен возвращать все сувениры, имеющих >= n отзывов.
-    //     // Кроме того, в ответе должны быть только поля id, name, image, price и rating.
-    // }
-    //
-    // deleteOutOfStockSouvenirs() {
-    //     // Данный метод должен удалять все сувениры, которых нет в наличии
-    //     // (то есть amount = 0).
-    //
-    //     // Метод должен возвращать количество удаленных сувениров в случае успешного удаления.
-    // }
-    //
+    getDisscusedSouvenirs(n) {
+        return this.souvenir.findAll({
+            attributes: ['name', 'image', 'price', 'rating'],
+            include: {
+                model: this.review,
+                attributes: []
+            },
+            order: ['id'],
+            group: 'souvenirs.id',
+            having: this.sequelize.where(
+                this.sequelize.fn('COUNT', this.sequelize.col('reviews.id')), '>=', n)
+        });
+    }
+
+    deleteOutOfStockSouvenirs() {
+        return this.souvenir.destroy({
+            where: { amount: 0 }
+        });
+    }
+
     // addReview(souvenirId, { login, text, rating }) {
     //     // Данный метод должен добавлять отзыв к сувениру souvenirId
     //     // содержит login, text, rating - из аргументов.
     //     // Обратите внимание, что при добавлении отзыва рейтинг сувенира должен быть пересчитан,
     //     // и всё это должно происходить за одну транзакцию (!).
     // }
-    //
-    // getCartSum(login) {
-    //     // Данный метод должен считать общую стоимость корзины пользователя login
-    //     // У пользователя может быть только одна корзина, поэтому это тоже можно отразить
-    //     // в модели.
-    // }
+
+    getCartSum(login) {
+        return this.cart.sum('souvenirs.price', {
+            includeIgnoreAttributes: false,
+            include: [
+                { model: this.souvenir },
+                { model: this.user, where: { login } }
+            ],
+            group: 'carts.id'
+        });
+    }
 }
 
 module.exports = Queries;
