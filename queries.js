@@ -1,5 +1,8 @@
 'use strict';
 
+const SIGNS_DOUBLE_PRECISION = 15;
+
+
 class Queries {
     constructor(models) {
         this.models = models;
@@ -175,9 +178,10 @@ class Queries {
                     ]
                 }
             );
-            const newRating = souvenir.reviews.reduce((accumulator, review) => {
+            let newRating = souvenir.reviews.reduce((accumulator, review) => {
                 return accumulator + review.dataValues.rating;
             }, 0) / souvenir.reviews.length;
+            newRating = Number(newRating.toPrecision(SIGNS_DOUBLE_PRECISION));
             souvenir.update(
                 { rating: newRating },
                 {},
@@ -200,9 +204,11 @@ class Queries {
         });
         souvenirs = souvenirs.dataValues.souvenirs;
 
-        return souvenirs.reduce((accumulator, souvenir) => {
+        const sum = souvenirs.reduce((accumulator, souvenir) => {
             return accumulator + souvenir.dataValues.price;
         }, 0);
+
+        return Number(sum.toPrecision(SIGNS_DOUBLE_PRECISION));
     }
 }
 
