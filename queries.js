@@ -82,15 +82,15 @@ class Queries {
         });
     }
 
-    addReview(souvenirId, { login, text, rating }) {
-        const user = this.user.findOne({ where: { login } });
-        const souvenir = this.souvenir.findById(souvenirId);
+    async addReview(souvenirId, { login, text, rating }) {
+        const user = await this.user.findOne({ where: { login } });
+        const souvenir = await this.souvenir.findById(souvenirId);
 
         return this.sequelize.transaction(async transaction => {
             await souvenir.createReview({ userId: user.id, text, rating }, { transaction });
             const reviews = await souvenir.getReviews({ transaction });
-            await souvenir.update({ rating: (souvenir.rating * (reviews.length - 1) + rating) /
-            (reviews.length) }, { transaction });
+            rating = (souvenir.rating * (reviews.length - 1) + rating)/(reviews.length);
+            await souvenir.update({ rating }, { transaction });
         });
     }
 
