@@ -1,5 +1,8 @@
 'use strict';
 
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
+
 class Queries {
     constructor(models) {
         const { Country, Tag, Review, Souvenir, Cart, User } = models;
@@ -21,7 +24,6 @@ class Queries {
 
     getCheapSouvenirs(price) {
         // Данный метод должен возвращать все сувениры, цена которых меньше или равна price.
-        const Op = this.sequelize.Op;
 
         return this.Souvenir.findAll({
             where: {
@@ -40,13 +42,14 @@ class Queries {
         // Данный метод должен возвращать все сувениры, в тегах которых есть tag.
         // Кроме того, в ответе должны быть только поля id, name, image, price и rating.
 
-        return this.sequelize.query(`
-            SELECT souvenirs.id, souvenirs.name, souvenirs.image, souvenirs.price, souvenirs.rating
-            FROM souvenir_tags
-            JOIN souvenirs on souvenirs.id=souvenir_tags."souvenirId"
-            JOIN tags on tags.id=souvenir_tags."tagId"
-            WHERE tags.name = '${tag}'
-            `).then(result => result[0]);
+        return this.Souvenir.findAll({
+            attributes: ['id', 'name', 'image', 'price', 'rating'],
+            include: {
+                model: this.Tag,
+                where: { name: tag },
+                attributes: []
+            }
+        });
     }
 
     getSouvenirsCount({ country, rating, price }) {
@@ -56,9 +59,8 @@ class Queries {
 
         // Важно, чтобы метод работал очень быстро,
         // поэтому учтите это при определении моделей (!).
-        const Op = this.sequelize.Op;
 
-        return this.Souvenir.findAll({
+        return this.Souvenir.count({
             where: {
                 rating: {
                     [Op.gte]: rating
@@ -70,7 +72,7 @@ class Queries {
             include: [{
                 model: this.Country,
                 where: {
-                    name: { [Op.eq]: country }
+                    name: country
                 }
             }]
         });
@@ -79,7 +81,6 @@ class Queries {
     searchSouvenirs(substring) {
         // Данный метод должен возвращать все сувениры, в название которых входит
         // подстрока substring. Поиск должен быть регистронезависимым.
-        const Op = this.sequelize.Op;
 
         return this.Souvenir.findAll({
             where: {
@@ -91,24 +92,29 @@ class Queries {
     }
 
     getDisscusedSouvenirs(n) {
-        // Данный метод должен возвращать все сувениры, имеющих >= n отзывов.
-        // Кроме того, в ответе должны быть только поля name, image, price и rating.
+        return this.Souvenir.findAll({
+            attributes: ['name', 'image', 'price', 'rating'],
+            include: {
+                model: this.Review,
+                attributes: []
+            },
+            order: ['id'],
+            group: ['souvenir.id'],
+            having: Sequelize.literal(`count(*) >= ${n}`)
+        });
+    }
 
-        return this.sequelize.query(`
-            SELECT name, image, price, rating FROM
-            (SELECT souvenirs.name, souvenirs.image, souvenirs.price, souvenirs.rating, count(*)
-            FROM souvenirs
-            JOIN reviews ON souvenirs.id=reviews."souvenirId"
-            GROUP BY souvenirs.name, souvenirs.image, souvenirs.price, souvenirs.rating) as result
-            WHERE count >= ${n}
-            `).then(result => result[0]);
+    countReviews(souvenirId) {
+        return this.Review.count({ where: { souvenirId } });
     }
 
     deleteOutOfStockSouvenirs() {
         // Данный метод должен удалять все сувениры, которых нет в наличии
         // (то есть amount = 0).
 
-        // Метод должен возвращать количество удаленных сувениров в случае успешного удаления.
+        return this.Souvenir.destroy({
+            where: { amount: 0 }
+        });
     }
 
     addReview(souvenirId, { login, text, rating }) {
@@ -116,12 +122,44 @@ class Queries {
         // содержит login, text, rating - из аргументов.
         // Обратите внимание, что при добавлении отзыва рейтинг сувенира должен быть пересчитан,
         // и всё это должно происходить за одну транзакцию (!).
+
+        return this.sequelize.transaction(async transaction => {
+            const souvenir = await this.Souvenir.findById(souvenirId, { transaction });
+            const souvenirRating = souvenir.dataValues.rating;
+
+            const reviewsCount = await this.countReviews(souvenirId);
+
+            const newRating = (souvenirRating * reviewsCount + rating) / (reviewsCount + 1);
+
+            await this.Souvenir.update({
+                rating: newRating
+            }, {
+                where: { id: souvenirId },
+                transaction
+            });
+
+            const userId = await this.User.findOne({
+                where: { login },
+                transaction
+            }).then(user => user.id);
+
+            await this.Review.create({ souvenirId, userId, text, rating }, { transaction });
+        });
     }
 
     getCartSum(login) {
         // Данный метод должен считать общую стоимость корзины пользователя login
         // У пользователя может быть только одна корзина, поэтому это тоже можно отразить
         // в модели.
+
+        return this.sequelize.query(`
+            SELECT sum(souvenirs.price)
+            FROM cart_souvenirs
+            JOIN souvenirs ON cart_souvenirs."souvenirId"=souvenirs.id
+            JOIN carts ON cart_souvenirs."cartId"=carts.id
+            WHERE carts."userId" = (SELECT id FROM users WHERE login = '${login}')
+            GROUP BY carts.id
+        `).then(res => res[0][0].sum);
     }
 }
 

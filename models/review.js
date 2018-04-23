@@ -2,14 +2,14 @@
 
 module.exports = (sequelize, DataTypes) => {
     return sequelize.define('review', {
-        id: { type: DataTypes.INTEGER, allowNull: false, unique: true, primaryKey: true },
+        id: { type: DataTypes.INTEGER, allowNull: false, primaryKey: true, autoIncrement: true },
         text: { type: DataTypes.STRING },
         rating: { type: DataTypes.INTEGER },
         isApproved: { type: DataTypes.BOOLEAN, defaultValue: false },
         createdAt: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW },
         updatedAt: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW },
-        souvenirId: { type: DataTypes.INTEGER },
-        userId: { type: DataTypes.INTEGER }
+        souvenirId: { type: DataTypes.INTEGER, foreignKey: true },
+        userId: { type: DataTypes.INTEGER, foreignKey: true }
     });
 };
 

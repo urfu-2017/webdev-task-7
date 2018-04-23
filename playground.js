@@ -18,7 +18,12 @@ const Queries = require('./queries');
         //     country: 'Япония', price: 20000, rating: 4
         // });
         // const result = await queries.searchSouvenirs('магнит');
-        const result = await queries.getDisscusedSouvenirs(2);
+        // const result = await queries.getDisscusedSouvenirs(5);
+        // const result = await queries.deleteOutOfStockSouvenirs();
+        const result = await queries.getCartSum('punisher');
+        // const result = await queries.addReview(1, {
+        //     login: 'punisher', rating: 5, text: 'Sample text'
+        // });
 
         console.info(result);
     } catch (error) {

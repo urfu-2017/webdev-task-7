@@ -2,7 +2,7 @@
 
 module.exports = (sequelize, DataTypes) => {
     return sequelize.define('souvenir', {
-        id: { type: DataTypes.INTEGER, allowNull: false, unique: true, primaryKey: true },
+        id: { type: DataTypes.INTEGER, allowNull: false, primaryKey: true, autoIncrement: true },
         name: { type: DataTypes.STRING, allowNull: false },
         image: { type: DataTypes.STRING },
         price: { type: DataTypes.DOUBLE, allowNull: false },
@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
         isRecent: { type: DataTypes.BOOLEAN },
         createdAt: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW },
         updatedAt: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW },
-        countryId: { type: DataTypes.INTEGER }
+        countryId: { type: DataTypes.INTEGER, foreignKey: true }
     });
 };
 
