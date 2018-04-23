@@ -10,7 +10,10 @@ const Queries = require('./queries');
 
     try {
         // Здесь можно делать запросы, чтобы проверять, что они правильно работают
-        const result = await queries.addReview(1, { login: 'batgirl', text: 'start', rating: 100500 });
+        const result = await queries.addReview(
+            1,
+            { login: 'batgirl', text: 'start', rating: 100500 }
+        );
         // const result = await queries.getDisscusedSouvenirs(0);
 
         console.info(result);
