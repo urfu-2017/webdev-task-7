@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
             primaryKey: true
         },
         name: DataTypes.TEXT,
+        isRecent: DataTypes.BOOLEAN,
         image: DataTypes.TEXT,
         price: DataTypes.DOUBLE,
         rating: DataTypes.DOUBLE,
