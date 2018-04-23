@@ -28,9 +28,7 @@ Cart.belongsTo(User, {
 });
 
 Cart.belongsToMany(Souvenir, {
-    through: CartSouvenir,
-    foreignKey: 'cartId',
-    targetKey: 'id'
+    through: CartSouvenir
 });
 
 Souvenir.belongsTo(Country, {
@@ -43,15 +41,10 @@ Review.belongsTo(User, {
     targetKey: 'id'
 });
 
-Souvenir.hasMany(Review, {
-    foreignKey: 'id',
-    targetKey: 'souvenirId'
-});
+Souvenir.hasMany(Review);
 
 Souvenir.belongsToMany(Tag, {
-    through: SouvenirTag,
-    foreignKey: 'tagId',
-    targetId: 'id'
+    through: SouvenirTag
 });
 
 module.exports.sequelize = sequelize;
