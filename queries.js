@@ -102,9 +102,8 @@ class Queries {
                             souvenirId,
                             userId: user.id
                         };
-                        const reviewsCount = reviews.length;
-                        const newRating = (souvenir.rating * reviewsCount || 0 + rating) /
-                            (reviewsCount + 1);
+                        const newRating = reviews
+                            .reduce((acc, curr) => acc + curr.rating, 0) / reviews.length;
 
                         return Promise.all([
                             souvenir.update({ rating: newRating }, { transaction: t }),
