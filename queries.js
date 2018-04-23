@@ -24,7 +24,7 @@ class Queries {
 
     // Данный метод должен возвращать все сувениры.
     async getAllSouvenirs() {
-        return this.Souvenir.findAll({ include: [{ model: this.Review }] });
+        return this.Souvenir.findAll();
     }
 
     // Данный метод должен возвращать все сувениры, цена которых меньше или равна price.
@@ -140,8 +140,9 @@ class Queries {
             await souvenir.createReview(review, { transaction });
 
             rating = await this.Review.aggregate('rating', 'AVG', {
-                where: { 'souvenirId': souvenir.id },
-                dataType: this.sequelize.Sequelize.DataTypes.DOUBLE
+                where: { souvenirId: souvenir.id },
+                dataType: this.sequelize.Sequelize.DataTypes.DOUBLE,
+                transaction
             });
 
             await souvenir.update({ rating }, { transaction });
