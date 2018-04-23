@@ -44,7 +44,7 @@ class Queries {
      * @returns {Promise}
      */
     getTopRatingSouvenirs(n) {
-        return makePlain(this.models.SouvenirTag.findAll(
+        return this.models.Souvenir.findAll(
             {
                 include: [
                     { model: this.models.Souvenir },
@@ -54,7 +54,7 @@ class Queries {
                 order: [[this.models.Souvenir, 'rating', 'DESC']],
                 limit: n
             }
-        ));
+        );
     }
 
     // /**
