@@ -12,9 +12,8 @@ const Queries = require('./queries');
         // Здесь можно делать запросы, чтобы проверять, что они правильно работают
         const result = await queries.addReview(
             1,
-            { login: 'batgirl', text: 'start', rating: 100500 }
+            { login: 'batgirl', text: 'start', rating: -1005000 }
         );
-        // const result = await queries.getDisscusedSouvenirs(0);
 
         console.info(result);
     } catch (error) {

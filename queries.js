@@ -128,15 +128,22 @@ class Queries {
      * @returns {Promise}
      */
     async getDisscusedSouvenirs(n) {
-        const souvenirsWithReviews = await this.models.Souvenir.findAll(
+        return this.models.Souvenir.findAll(
             {
                 include: [
-                    { model: this.models.Review }
-                ]
+                    {
+                        model: this.models.Review,
+                        attributes: []
+                    }
+                ],
+                attributes: ['name', 'image', 'price', 'rating'],
+                order: ['id'],
+                group: 'souvenirs.id',
+                having: this.sequelize.where(
+                    this.sequelize.fn('COUNT', this.sequelize.col('reviews.id')), '>=', n
+                )
             }
         );
-
-        return souvenirsWithReviews.filter(souvenir => souvenir.dataValues.reviews.length >= n);
     }
 
     /**
@@ -164,12 +171,6 @@ class Queries {
      */
     addReview(souvenirId, { login, text, rating }) {
         return this.sequelize.transaction(async t => {
-            let user = await this.models.User.findOne({ where: { login } });
-            user = user.dataValues;
-            await this.models.Review.create(
-                { text, rating, souvenirId, userId: user.id },
-                { transaction: t }
-            );
             let souvenir = await this.models.Souvenir.findById(
                 souvenirId,
                 {
@@ -180,11 +181,16 @@ class Queries {
             );
             let newRating = (souvenir.reviews.reduce((accumulator, review) => {
                 return accumulator + review.dataValues.rating;
-            }, 0) + rating) / souvenir.reviews.length;
+            }, 0) + rating) / (souvenir.reviews.length + 1);
             newRating = Number(newRating.toPrecision(SIGNS_DOUBLE_PRECISION));
             souvenir.update(
                 { rating: newRating },
-                {},
+                { transaction: t }
+            );
+            let user = await this.models.User.findOne({ where: { login } });
+            user = user.dataValues;
+            await this.models.Review.create(
+                { text, rating, souvenirId, userId: user.id },
                 { transaction: t }
             );
         });
