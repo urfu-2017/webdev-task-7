@@ -6,7 +6,6 @@ const Sequalize = require('sequelize');
 const sequelize = new Sequalize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {
     host: process.env.DB_HOST,
     dialect: 'postgres',
-    operatorsAliases: false, // если вы будете делать запросы без deprecated алиасов
     logging: false,
     define: {
         underscored: false
@@ -21,6 +20,13 @@ const Cart = sequelize.import('models/cart');
 const User = sequelize.import('models/user');
 
 // Ваши relations между моделями :)
+
+Souvenir.hasMany(Review);
+Souvenir.belongsToMany(Tag, { through: 'SouvenirTags' });
+Souvenir.belongsTo(Country);
+Review.belongsTo(User);
+Cart.belongsTo(User);
+Cart.belongsToMany(Souvenir, { through: 'CartSouvenirs' });
 
 module.exports.sequelize = sequelize;
 
