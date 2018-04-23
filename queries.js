@@ -125,7 +125,7 @@ class Queries {
                 sum += cart.souvenirs[i].price;
             }
 
-            return sum;
+            return sum.toFixed(10);
         });
     }
 }
