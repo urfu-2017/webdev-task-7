@@ -104,6 +104,7 @@ class Queries {
         // Кроме того, в ответе должны быть только поля id, name, image, price и rating.
         return this.Souvenir.findAll({
             attributes: [
+                'id',
                 'name',
                 'image',
                 'price',
@@ -174,8 +175,8 @@ class Queries {
             });
 
             const souvenirsCount = souvenir.reviews.length;
-            const souvenirRating = souvenir.rating * (souvenirsCount - 1) + rating /
-                souvenirsCount;
+            const souvenirRating = (souvenir.rating * souvenirsCount + rating) /
+                (souvenirsCount + 1);
 
             await souvenir.update({
                 rating: souvenirRating
