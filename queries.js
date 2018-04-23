@@ -44,7 +44,8 @@ class Queries {
                 attributes: ['id', 'name', 'image', 'price', 'rating'],
                 include: [{
                     model: this.tag,
-                    where: { name: tag }
+                    where: { name: tag },
+                    attributes: []
                 }]
             }
         );
@@ -73,8 +74,7 @@ class Queries {
         // Данный метод должен возвращать все сувениры, в название которых входит
         // подстрока substring. Поиск должен быть регистронезависимым.
         return this.souvenir.findAll({
-            where: { name: { [this.op.iLike]: `%${substring}%` } },
-            attributes: ['id', 'name']
+            where: { name: { [this.op.iLike]: `%${substring}%` } }
         });
     }
 
@@ -82,9 +82,10 @@ class Queries {
         // Данный метод должен возвращать все сувениры, имеющих >= n отзывов.
         // Кроме того, в ответе должны быть только поля id, name, image, price и rating.
         return this.souvenir.findAll({
-            attributes: ['id', 'name', 'image', 'price', 'rating'],
+            attributes: ['name', 'image', 'price', 'rating'],
             include: [{
-                model: this.review
+                model: this.review,
+                attributes: []
             }]
         }).then(souvenirs => souvenirs.filter(elem => elem.reviews.length >= n));
     }
