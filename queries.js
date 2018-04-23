@@ -119,7 +119,7 @@ class Queries {
 
         return this.sequelize.transaction(async transaction => {
             await souvenir.createReview({ userId: user.id, text, rating }, { transaction });
-            await souvenir.update({ newRating }, { transaction });
+            await souvenir.update({ rating: newRating }, { transaction });
         });
     }
 
