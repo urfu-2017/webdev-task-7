@@ -103,7 +103,7 @@ class Queries {
                             userId: user.id
                         };
                         const reviewsCount = reviews.length;
-                        const newRating = (souvenir.rating * reviewsCount + rating) /
+                        const newRating = (souvenir.rating * reviewsCount || 0 + rating) /
                             (reviewsCount + 1);
 
                         return Promise.all([
