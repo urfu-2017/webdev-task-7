@@ -83,11 +83,16 @@ class Queries {
         // Кроме того, в ответе должны быть только поля id, name, image, price и rating.
         return this.souvenir.findAll({
             attributes: ['name', 'image', 'price', 'rating'],
-            include: [{
+            include: {
                 model: this.review,
                 attributes: []
-            }]
-        }).then(souvenirs => souvenirs.filter(elem => elem.reviews.length >= n));
+            },
+            order: ['id'],
+            group: 'souvenirs.id',
+            having: this.sequelize.where(
+                this.sequelize.fn('COUNT', this.sequelize.col('reviews.id')), '>=', n
+            )
+        });
     }
 
     deleteOutOfStockSouvenirs() {
@@ -108,8 +113,14 @@ class Queries {
         // Обратите внимание, что при добавлении отзыва рейтинг сувенира должен быть пересчитан,
         // и всё это должно происходить за одну транзакцию (!).
         const user = await this.user.findOne({ where: { login } });
+        const souvenir = await this.souvenir.findById(souvenirId);
+        const reviews = await souvenir.getReviews();
+        const newRating = (souvenir.rating * reviews.length + rating) / (reviews.length + 1);
 
-        return { login, text, rating };
+        return this.sequelize.transaction(async transaction => {
+            await souvenir.createReview({ userId: user.id, text, rating }, { transaction });
+            await souvenir.update({ newRating }, { transaction });
+        });
     }
 
     getCartSum(login) {
