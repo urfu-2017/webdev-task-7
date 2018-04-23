@@ -10,7 +10,7 @@ const Queries = require('./queries');
 
     try {
         // Здесь можно делать запросы, чтобы проверять, что они правильно работают
-        const result = await makePlain(queries.getDisscusedSouvenirs(0));
+        const result = await queries.addReview(1);
 
         console.info(result);
     } catch (error) {
@@ -24,6 +24,7 @@ const Queries = require('./queries');
  * @param {Promise} response
  * @returns {Promise}
  */
+// eslint-disable-next-line no-unused-vars
 async function makePlain(response) {
     return (await response).map(el => el.get({ plain: true }));
 }

@@ -66,10 +66,7 @@ class Queries {
                         attributes: []
                     }
                 ],
-                attributes: {
-                    include: ['id', 'name', 'image', 'price', 'rating'],
-                    exclude: ['amount', 'isRecent', 'countryId', 'createdAt', 'updatedAt', 'tags']
-                }
+                attributes: ['id', 'name', 'image', 'price', 'rating']
             }
         );
     }
@@ -83,14 +80,12 @@ class Queries {
      * @returns {Promise}
      */
     getSouvenirsCount({ country, rating, price }) {
-        return this.models.Souvenir.findAndCountAll({
+        return this.models.Souvenir.count({
             include: [
                 {
                     model: this.models.Country,
                     where: {
-                        name: {
-                            [this.Op.eq]: country
-                        }
+                        name: country
                     }
                 }
             ],
@@ -129,24 +124,16 @@ class Queries {
      * @param {Number} n
      * @returns {Promise}
      */
-    getDisscusedSouvenirs(n) {
-        return this.models.Souvenir.findAll(
+    async getDisscusedSouvenirs(n) {
+        const souvenirsWithReviews = await this.models.Souvenir.findAll(
             {
                 include: [
-                    {
-                        model: this.models.Review,
-                        attributes: {
-                            all: true
-                        }
-                    }
-                ],
-                where: {
-                    [this.sequelize.fn('array_length', this.sequelize.col('reviews'), 1)]: {
-                        [this.Op.gte]: n
-                    }
-                }
+                    { model: this.models.Review }
+                ]
             }
         );
+
+        return souvenirsWithReviews.filter(souvenir => souvenir.dataValues.reviews.length >= n);
     }
 
     /**
@@ -162,19 +149,49 @@ class Queries {
         });
     }
 
+    /**
+     * Добавляет отзыв к сувениру souvenirId
+     * При добавлении отзыва рейтинг сувенира пересчитывается
+     * Всё это происходит за одну транзакцию
+     * @param {Number} souvenirId
+     * @param {String} login
+     * @param {String} text
+     * @param {Number} rating
+     * @returns {Promise}
+     */
     addReview(souvenirId, { login, text, rating }) {
-        return [souvenirId, { login, text, rating }];
-        // Данный метод должен добавлять отзыв к сувениру souvenirId
-        // содержит login, text, rating - из аргументов.
-        // Обратите внимание, что при добавлении отзыва рейтинг сувенира должен быть пересчитан,
-        // и всё это должно происходить за одну транзакцию (!).
+        return { login, text, rating };
+        // return this.sequelize.transaction(async t => {
+        //     const souvenir = await this.models.Souvenir.findById(
+        //         souvenirId,
+        //         {
+        //             include: [
+        //                 { model: this.models.Review }
+        //             ]
+        //         },
+        //         { transaction: t }
+        //     );
+        //     // console.log(souvenir);
+        // });
     }
 
-    getCartSum(login) {
-        return login;
-        // Данный метод должен считать общую стоимость корзины пользователя login
-        // У пользователя может быть только одна корзина, поэтому это тоже можно отразить
-        // в модели.
+    /**
+     * Считает общую стоимость корзины пользователя login
+     * @param {String} login
+     * @returns {Promise}
+     */
+    async getCartSum(login) {
+        const user = await this.models.User.findOne({ where: { login } });
+        const userId = user.dataValues.id;
+        let souvenirs = await this.models.Cart.find({
+            include: [{ model: this.models.Souvenir }],
+            where: { userId }
+        });
+        souvenirs = souvenirs.dataValues.souvenirs;
+
+        return souvenirs.reduce((accumulator, souvenir) => {
+            return accumulator + souvenir.dataValues.price;
+        }, 0);
     }
 }
 
