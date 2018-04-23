@@ -81,8 +81,8 @@ class Queries {
     getDisscusedSouvenirs(n) {
         // Данный метод должен возвращать все сувениры, имеющих >= n отзывов.
         // Кроме того, в ответе должны быть только поля id, name, image, price и rating.
-        return this.souvenir.findAll({
-            attributes: ['name', 'image', 'price', 'rating'],
+    return this.souvenir.findAll({
+        attributes: ['name', 'image', 'price', 'rating'],
             include: [{
                 model: this.review
             }]
