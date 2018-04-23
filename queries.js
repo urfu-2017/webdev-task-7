@@ -115,9 +115,8 @@ class Queries {
                     'COUNT',
                     this.sequelize.col('reviews.id')
                 ),
-                {
-                    [this.Op.gte]: n
-                }
+                '>=',
+                n
             ),
             include: {
                 model: this.Review,
@@ -175,8 +174,8 @@ class Queries {
             });
 
             const souvenirsCount = souvenir.reviews.length;
-            const souvenirRating = souvenir.rating * souvenirsCount + rating /
-                (souvenirsCount + 1);
+            const souvenirRating = souvenir.rating * (souvenirsCount - 1) + rating /
+                souvenirsCount;
 
             await souvenir.update({
                 rating: souvenirRating
