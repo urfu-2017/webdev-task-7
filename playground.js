@@ -10,7 +10,7 @@ const Queries = require('./queries');
 
     try {
         // Здесь можно делать запросы, чтобы проверять, что они правильно работают
-        const result = await makePlain(queries.getAllSouvenirs());
+        const result = await makePlain(queries.getDisscusedSouvenirs(0));
 
         console.info(result);
     } catch (error) {
