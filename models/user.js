@@ -4,20 +4,13 @@ module.exports = (sequelize, DataTypes) => {
     return sequelize.define('users', {
         id: {
             type: DataTypes.INTEGER,
+            allowNull: false,
             primaryKey: true,
-            allowNull: false
+            autoIncrement: true
         },
         login: {
             type: DataTypes.TEXT,
             unique: true
-        },
-        createdAt: {
-            type: DataTypes.DATE,
-            allowNull: false
-        },
-        updatedAt: {
-            type: DataTypes.DATE,
-            allowNull: false
         }
     });
 };

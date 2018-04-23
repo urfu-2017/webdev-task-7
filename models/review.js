@@ -4,24 +4,19 @@ module.exports = (sequelize, DataTypes) => {
     return sequelize.define('reviews', {
         id: {
             type: DataTypes.INTEGER,
-            autoIncrement: true,
+            allowNull: false,
             primaryKey: true,
-            allowNull: false
+            autoIncrement: true
         },
-        text: DataTypes.TEXT,
-        rating: DataTypes.INTEGER,
         isApproved: {
             type: DataTypes.BOOLEAN,
-            default: false
+            defaultValue: false
         },
-        createdAt: {
-            type: DataTypes.DATE,
-            allowNull: false
+        rating: {
+            type: DataTypes.DOUBLE,
+            validate: { min: 0, max: 5 }
         },
-        updatedAt: {
-            type: DataTypes.DATE,
-            allowNull: false
-        },
+        text: DataTypes.TEXT,
         souvenirId: {
             type: DataTypes.INTEGER,
             references: {

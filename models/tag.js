@@ -4,17 +4,13 @@ module.exports = (sequelize, DataTypes) => {
     return sequelize.define('tags', {
         id: {
             type: DataTypes.INTEGER,
+            allowNull: false,
             primaryKey: true,
-            allowNull: false
+            autoIncrement: true
         },
-        name: DataTypes.TEXT,
-        createdAt: {
-            type: DataTypes.DATE,
-            allowNull: false
-        },
-        updatedAt: {
-            type: DataTypes.DATE,
-            allowNull: false
+        name: {
+            type: DataTypes.TEXT,
+            unique: true
         }
     });
 };
