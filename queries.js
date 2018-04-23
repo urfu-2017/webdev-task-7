@@ -84,8 +84,7 @@ class Queries {
         return this.souvenir.findAll({
             attributes: ['name', 'image', 'price', 'rating'],
             include: [{
-                model: this.review,
-                attributes: []
+                model: this.review
             }]
         }).then(souvenirs => souvenirs.filter(elem => elem.reviews.length >= n));
     }
@@ -125,7 +124,7 @@ class Queries {
                 sum += cart.souvenirs[i].price;
             }
 
-            return sum.toFixed(10);
+            return sum.toFixed();
         });
     }
 }
