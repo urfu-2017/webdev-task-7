@@ -10,7 +10,7 @@ const Queries = require('./queries');
 
     try {
         // Здесь можно делать запросы, чтобы проверять, что они правильно работают
-        const result = await queries.addReview(1);
+        const result = await queries.addReview(1, { login: 'batgirl', text: 'end', rating: 5 });
 
         console.info(result);
     } catch (error) {

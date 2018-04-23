@@ -160,19 +160,30 @@ class Queries {
      * @returns {Promise}
      */
     addReview(souvenirId, { login, text, rating }) {
-        return { login, text, rating };
-        // return this.sequelize.transaction(async t => {
-        //     const souvenir = await this.models.Souvenir.findById(
-        //         souvenirId,
-        //         {
-        //             include: [
-        //                 { model: this.models.Review }
-        //             ]
-        //         },
-        //         { transaction: t }
-        //     );
-        //     // console.log(souvenir);
-        // });
+        return this.sequelize.transaction(async t => {
+            let user = await this.models.User.findOne({ where: { login } });
+            user = user.dataValues;
+            await this.models.Review.create(
+                { text, rating, souvenirId, userId: user.id },
+                { transaction: t }
+            );
+            let souvenir = await this.models.Souvenir.findById(
+                souvenirId,
+                {
+                    include: [
+                        { model: this.models.Review }
+                    ]
+                }
+            );
+            const newRating = souvenir.reviews.reduce((accumulator, review) => {
+                return accumulator + review.dataValues.rating;
+            }, 0) / souvenir.reviews.length;
+            souvenir.update(
+                { rating: newRating },
+                {},
+                { transaction: t }
+            );
+        });
     }
 
     /**
