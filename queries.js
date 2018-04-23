@@ -104,13 +104,12 @@ class Queries {
         // Кроме того, в ответе должны быть только поля id, name, image, price и rating.
         return this.Souvenir.findAll({
             attributes: [
-                'id',
                 'name',
                 'image',
                 'price',
                 'rating'
             ],
-            group: 'souvenir.id',
+            order: ['id'],
             having: this.sequelize.where(
                 this.sequelize.fn(
                     'COUNT',
@@ -118,11 +117,7 @@ class Queries {
                 ),
                 '>=',
                 n
-            ),
-            include: {
-                model: this.Review,
-                attributes: []
-            }
+            )
         });
     }
 
@@ -175,8 +170,8 @@ class Queries {
             });
 
             const souvenirsCount = souvenir.reviews.length;
-            const souvenirRating = (souvenir.rating * souvenirsCount + rating) /
-                (souvenirsCount + 1);
+            const souvenirRating = (souvenir.rating * (souvenirsCount - 1) + rating) /
+                souvenirsCount;
 
             await souvenir.update({
                 rating: souvenirRating
