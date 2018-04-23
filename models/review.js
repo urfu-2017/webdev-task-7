@@ -11,6 +11,6 @@ module.exports = (sequelize, DataTypes) =>
         rating: { type: DataTypes.DOUBLE },
         isApproved: {
             type: DataTypes.BOOLEAN,
-            default: false
+            defaultValue: false
         }
     });
