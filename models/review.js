@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => sequelize.define('reviews', {
         defaultValue: false
     },
     rating: {
-        type: DataTypes.DOUBLE
+        type: DataTypes.INTEGER
     }
 }, {
     timestamps: true

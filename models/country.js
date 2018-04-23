@@ -10,5 +10,8 @@ module.exports = (sequelize, DataTypes) => sequelize.define('countries', {
         type: DataTypes.STRING
     }
 }, {
-    timestamps: true
+    timestamps: true,
+    indexes: [{
+        fields: ['name']
+    }]
 });

@@ -23,15 +23,15 @@ class Queries {
     // Далее идут методы, которые вам необходимо реализовать:
 
     // Данный метод должен возвращать все сувениры.
-    getAllSouvenirs() {
-        return this.Souvenir.findAll();
+    async getAllSouvenirs() {
+        return this.Souvenir.findAll({ include: [{ model: this.Review }] });
     }
 
     // Данный метод должен возвращать все сувениры, цена которых меньше или равна price.
     getCheapSouvenirs(price) {
         return this.Souvenir.findAll({
             where: {
-                price: { [this.sequelize.Op.lt]: price }
+                price: { [this.sequelize.Op.lte]: price }
             }
         });
     }
@@ -70,11 +70,13 @@ class Queries {
                 price: { [this.sequelize.Op.lte]: price }
             },
 
-            include: [{
-                model: this.Country,
-                where: { name: country },
-                attributes: []
-            }]
+            include: [
+                {
+                    model: this.Country,
+                    where: { name: country },
+                    attributes: []
+                }
+            ]
         });
     }
 
@@ -96,7 +98,9 @@ class Queries {
             order: ['id'],
             group: 'souvenirs.id',
             having: this.sequelize.where(
-                this.sequelize.fn('COUNT', this.sequelize.col('reviews.id')), '>=', n
+                this.sequelize.fn('COUNT', this.sequelize.col('reviews.id')),
+                '>=',
+                n
             ),
             include: {
                 model: this.Review,
@@ -126,15 +130,19 @@ class Queries {
         const souvenir = await this.Souvenir.findById(souvenirId);
 
         if (!user || !souvenir) {
-            throw new Error('You cannot add review to not exists souvenir or from not exists user');
+            throw new Error(
+                'You cannot add review to not existing souvenir or from not existing user'
+            );
         }
 
         return this.sequelize.transaction(async transaction => {
             const review = { userId: user.id, text, rating };
             await souvenir.createReview(review, { transaction });
 
-            const reviews = await souvenir.getReviews({ transaction });
-            rating = reviews.reduce((total, r) => total + r.rating, 0) / reviews.length;
+            rating = await this.Review.aggregate('rating', 'AVG', {
+                where: { 'souvenirId': souvenir.id },
+                dataType: this.sequelize.Sequelize.DataTypes.DOUBLE
+            });
 
             await souvenir.update({ rating }, { transaction });
         });
