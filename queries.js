@@ -145,7 +145,7 @@ class Queries {
 
         try {
             transaction = await this.sequelize.transaction();
- 
+
             const souvenir = await this.Souvenir.findOne({
                 include: {
                     model: this.Review
@@ -158,7 +158,7 @@ class Queries {
             }, {
                 transaction
             });
- 
+
             const user = await this.User.findOne({
                 attributes: ['id'],
                 where: {
@@ -167,7 +167,7 @@ class Queries {
             }, {
                 transaction
             });
- 
+
             const review = await this.Review.create({
                 userId: user.get('id'),
                 text,
@@ -176,12 +176,12 @@ class Queries {
             }, {
                 transaction
             });
- 
+
             const souvenirsAmount = souvenir.get('reviews').length;
             const score = souvenir.get('rating') * souvenirsAmount + rating;
             const count = souvenirsAmount + 1;
             const souvenirRating = score / count;
- 
+
             await souvenir.update({
                 rating: souvenirRating
             }, {
@@ -189,7 +189,7 @@ class Queries {
             });
 
             await transaction.commit();
- 
+
             return review;
         } catch (err) {
             await transaction.rollback();
