@@ -20,7 +20,7 @@ class Queries {
      * @returns {Promise}
      */
     getCheapSouvenirs(price) {
-        return makePlain(this.models.SouvenirTag.findAll(
+        return this.models.Souvenir.findAll(
             {
                 include: [
                     {
@@ -35,7 +35,7 @@ class Queries {
                 ],
                 attributes: { exclude: ['souvenirId', 'tagId'] }
             }
-        ));
+        );
     }
 
     /**
@@ -124,14 +124,6 @@ class Queries {
         // У пользователя может быть только одна корзина, поэтому это тоже можно отразить
         // в модели.
     }
-}
-
-/**
- * @param {Promise} response
- * @returns {Promise}
- */
-async function makePlain(response) {
-    return (await response).map(el => el.get({ plain: true }));
 }
 
 module.exports = Queries;
