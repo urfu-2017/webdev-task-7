@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         isApproved: {
             type: DataTypes.BOOLEAN,
-            default: true
+            default: false
         },
         souvenirId: {
             type: DataTypes.INTEGER

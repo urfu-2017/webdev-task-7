@@ -129,6 +129,7 @@ class Queries {
         return this._sequelize.transaction(async (t) => {
             await souvenir.createReview({
                 userId: user.id,
+                isApproved: false,
                 text,
                 rating
             }, {
