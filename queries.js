@@ -84,7 +84,8 @@ class Queries {
         return this.souvenir.findAll({
             attributes: ['name', 'image', 'price', 'rating'],
             include: [{
-                model: this.review
+                model: this.review,
+                attributes: []
             }]
         }).then(souvenirs => souvenirs.filter(elem => elem.reviews.length >= n));
     }
@@ -101,11 +102,13 @@ class Queries {
         });
     }
 
-    addReview(souvenirId, { login, text, rating }) {
+    async addReview(souvenirId, { login, text, rating }) {
         // Данный метод должен добавлять отзыв к сувениру souvenirId
         // содержит login, text, rating - из аргументов.
         // Обратите внимание, что при добавлении отзыва рейтинг сувенира должен быть пересчитан,
         // и всё это должно происходить за одну транзакцию (!).
+        const user = await this.user.findOne({ where: { login } });
+
         return { login, text, rating };
     }
 
@@ -124,7 +127,7 @@ class Queries {
                 sum += cart.souvenirs[i].price;
             }
 
-            return sum.toFixed();
+            return sum.toFixed(10);
         });
     }
 }
