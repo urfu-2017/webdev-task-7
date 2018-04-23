@@ -86,7 +86,7 @@ class Queries {
             include: [{
                 model: this.review
             }]
-        }).then(souvenirs => souvenirs.filter(elem => elem.reviews.length >= n))
+        }).then(souvenirs => souvenirs.filter(elem => elem.reviews.length >= n));
     }
 
     deleteOutOfStockSouvenirs() {
