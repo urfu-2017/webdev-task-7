@@ -56,7 +56,7 @@ class Queries {
                 }
             },
             include: {
-                model: this.country,
+                model: this.Country,
                 where: {
                     name: country
                 }
