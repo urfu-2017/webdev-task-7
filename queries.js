@@ -63,6 +63,7 @@ class Queries {
                 }
             },
             include: {
+                attributes: [],
                 model: this.Country,
                 where: {
                     name: country
@@ -91,6 +92,7 @@ class Queries {
                 model: this.Review,
                 attributes: []
             },
+            order: ['id'],
             group: 'souvenirs.id',
             attributes: ['id', 'name', 'image', 'price', 'rating'],
             having: this.sequelize.where(
