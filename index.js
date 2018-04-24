@@ -31,8 +31,8 @@ Souvenir.hasMany(Review, {
     targetKey: 'id'
 });
 Souvenir.hasMany(Country, {
-    foreignKey: 'id',
-    targetKey: 'countryId'
+    foreignKey: 'countryId',
+    targetKey: 'id'
 });
 Souvenir.belongsToMany(Tag, { through: 'souvenir_tags' });
 Cart.belongsToMany(Souvenir, { through: 'cart_souvenirs' });

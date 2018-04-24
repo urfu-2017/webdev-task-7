@@ -2,13 +2,12 @@
 
 module.exports = (sequelize, DataTypes) => {
     // Ваша модель отзыва
-    return sequelize.define('review', {
+    return sequelize.define('reviews', {
         id: {
             type: DataTypes.INTEGER,
             allowNull: false,
             primaryKey: true,
-            autoIncrement: true,
-            defaultValue: ''
+            autoIncrement: true
         },
         text: {
             type: DataTypes.TEXT,
@@ -23,11 +22,13 @@ module.exports = (sequelize, DataTypes) => {
         },
         souvenirId: {
             type: DataTypes.INTEGER,
-            foreignKey: true
+            foreignKey: true,
+            allowNull: false
         },
         userId: {
             type: DataTypes.INTEGER,
-            foreignKey: true
+            foreignKey: true,
+            allowNull: false
         }
     }, {
         timestamps: true,

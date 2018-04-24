@@ -7,8 +7,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             allowNull: false,
             primaryKey: true,
-            autoIncrement: true,
-            defaultValue: ''
+            autoIncrement: true
         },
         login: {
             type: DataTypes.TEXT
