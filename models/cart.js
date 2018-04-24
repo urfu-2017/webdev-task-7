@@ -10,8 +10,9 @@ module.exports = (sequelize, DataTypes) => {
             autoIncrement: true
         },
         userId: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.TEXT,
             allowNull: false,
+            foreignKey: true,
             references: {
                 model: 'users',
                 key: 'id'

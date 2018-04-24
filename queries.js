@@ -3,14 +3,6 @@
 class Queries {
     constructor(models) {
         // Что-нибудь инициализируем в конструкторе
-        // this.models.sequelize = models.sequelize;
-        // this.models.Op = models.sequelize.Op;
-        // this.models.Country = models.Country;
-        // this.models.Tag = models.Tag;
-        // this.models.Review = models.Review;
-        // this.models.Souvenir = models.Souvenir;
-        // this.models.Cart = models.Cart;
-        // this.models.User = models.User;
         this.models = models;
     }
 
