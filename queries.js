@@ -94,7 +94,7 @@ class Queries {
             },
             order: ['id'],
             group: 'souvenirs.id',
-            attributes: ['id', 'name', 'image', 'price', 'rating'],
+            attributes: ['name', 'image', 'price', 'rating'],
             having: this.sequelize.where(
                 this.sequelize.fn('COUNT', this.sequelize.col('reviews.id')), '>=', n
             )
