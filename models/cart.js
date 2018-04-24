@@ -7,14 +7,6 @@ module.exports = function (sequelize, DataTypes) {
             allowNull: false,
             primaryKey: true,
             autoIncrement: true
-        },
-        createdAt: {
-            type: DataTypes.DATE,
-            allowNull: false
-        },
-        updatedAt: {
-            type: DataTypes.DATE,
-            allowNull: false
         }
     }, {
         tableName: 'carts'

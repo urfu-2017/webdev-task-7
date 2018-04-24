@@ -27,6 +27,9 @@ Souvenir.belongsToMany(Tag, { through: 'souvenir_tags' });
 Souvenir.belongsTo(Country);
 Souvenir.hasMany(Review);
 
+Cart.belongsTo(User);
+Review.belongsTo(User);
+
 User.hasOne(Cart);
 Cart.belongsToMany(Souvenir, { through: 'cart_souvenirs' });
 

@@ -96,11 +96,12 @@ class Queries {
         // Кроме того, в ответе должны быть только поля id, name, image, price и rating.
 
         return this.models.Souvenir.findAll({
-            attributes: ['id', 'name', 'image', 'price', 'rating'],
+            attributes: ['name', 'image', 'price', 'rating'],
             include: {
                 model: this.models.Review,
                 attributes: []
             },
+            order: ['id'],
             group: 'souvenir.id',
             having: sequelize.where(sequelize.fn('COUNT', sequelize.col('*')), {
                 [Op.gte]: n
