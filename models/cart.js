@@ -5,14 +5,17 @@ module.exports = (sequelize, DataTypes) => {
     return sequelize.define('cart', {
         id: {
             type: DataTypes.INTEGER,
-            allowNull: true,
+            allowNull: false,
             primaryKey: true,
             autoIncrement: true
         },
         userId: {
             type: DataTypes.TEXT,
             allowNull: false,
-            foreignKey: true
+            references: {
+                model: 'users',
+                key: 'id'
+            }
         }
     }, {
         timestamps: true,
