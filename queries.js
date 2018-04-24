@@ -122,7 +122,7 @@ class Queries {
         }, { transaction })
             .then(() => souvenir.getReviews({ transaction }))
             .then(reviews => souvenir.update({
-                rating: (souvenir.rating * rating + (reviews.length - 1)) / reviews.length
+                rating: (souvenir.rating * (reviews.length - 1) + rating) / reviews.length
             }, { transaction })));
     }
 
