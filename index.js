@@ -13,6 +13,7 @@ const sequelize = new Sequalize(process.env.DB_NAME, process.env.DB_USER, proces
     }
 });
 
+
 const Country = sequelize.import('models/country');
 const Tag = sequelize.import('models/tag');
 const Review = sequelize.import('models/review');
@@ -21,6 +22,16 @@ const Cart = sequelize.import('models/cart');
 const User = sequelize.import('models/user');
 
 // Ваши relations между моделями :)
+
+Souvenir.belongsToMany(Tag, { through: 'souvenir_tags' });
+Souvenir.belongsTo(Country);
+Souvenir.hasMany(Review);
+
+Cart.belongsTo(User);
+Review.belongsTo(User);
+
+User.hasOne(Cart);
+Cart.belongsToMany(Souvenir, { through: 'cart_souvenirs' });
 
 module.exports.sequelize = sequelize;
 
