@@ -14,8 +14,6 @@ class Queries {
         this.User = models.User;
     }
 
-    // Далее идут методы, которые вам необходимо реализовать:
-
     getAllSouvenirs() {
         // Данный метод должен возвращать все сувениры.
         return this.Souvenir.findAll();
