@@ -112,7 +112,7 @@ class Queries {
         // содержит login, text, rating - из аргументов.
         // Обратите внимание, что при добавлении отзыва рейтинг сувенира должен быть пересчитан,
         // и всё это должно происходить за одну транзакцию (!).
-        const user = await this.user.findOne({ where: { login } });
+        const user = await this.user.findOne({ where: { login }, attributes: [] });
         const souvenir = await this.souvenir.findById(souvenirId);
         const reviews = await souvenir.getReviews();
         const newRating = (souvenir.rating * reviews.length + rating) / (reviews.length + 1);
@@ -123,23 +123,22 @@ class Queries {
         });
     }
 
-    getCartSum(login) {
+    async getCartSum(login) {
         // Данный метод должен считать общую стоимость корзины пользователя login
         // У пользователя может быть только одна корзина, поэтому это тоже можно отразить
         // в модели.
-        return this.cart.findOne({
+        const cart = await this.cart.findOne({
             include: [
                 { model: this.souvenir },
                 { model: this.user, where: { login } }
             ]
-        }).then(cart => {
-            let sum = 0;
-            for (let i = 0; i < cart.souvenirs.length; i++) {
-                sum += cart.souvenirs[i].price;
-            }
-
-            return sum.toFixed(10);
         });
+        let sum = 0;
+        for (let i = 0; i < cart.souvenirs.length; i++) {
+            sum += cart.souvenirs[i].price;
+        }
+
+        return sum.toFixed(10);
     }
 }
 
