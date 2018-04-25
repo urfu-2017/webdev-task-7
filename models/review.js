@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: false
         },
         rating: {
-            type: DataTypes.DOUBLE,
+            type: DataTypes.INTEGER,
             validate: { min: 0, max: 5 }
         },
         text: DataTypes.TEXT,
