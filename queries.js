@@ -18,7 +18,7 @@ class Queries {
         return this.models.Souvenir.findAll({
             where: {
                 price: {
-                    [this.models.Op.lte]: price
+                    [this.models.sequelize.Op.lte]: price
                 }
             }
         });
@@ -56,8 +56,8 @@ class Queries {
         // поэтому учтите это при определении моделей (!).
         return this.models.Souvenir.count({
             where: {
-                rating: { [this.models.Op.gte]: rating },
-                price: { [this.models.Op.lte]: price }
+                rating: { [this.models.sequelize.Op.gte]: rating },
+                price: { [this.models.sequelize.Op.lte]: price }
             },
             include: {
                 model: this.models.Country,
@@ -75,7 +75,7 @@ class Queries {
         return this.models.Souvenir.findAll({
             where: {
                 name: {
-                    [this.models.Op.iLike]: `%${substring}%`
+                    [this.models.sequelize.Op.iLike]: `%${substring}%`
                 }
             }
         });
@@ -91,10 +91,11 @@ class Queries {
                 attributes: []
             },
             group: this.models.Souvenir.name + '.id',
+            order: ['id'],
             having: this.models.sequelize.where(
                 this.models.sequelize.fn(
                     'COUNT',
-                    this.models.sequelize.col(this.models.Review.name + '.souvenirId')
+                    this.models.sequelize.col(this.models.Review.name + '.id')
                 ),
                 '>=',
                 n
@@ -133,11 +134,11 @@ class Queries {
                 userId: user.id
             }, { transaction });
             await newReview.save({ transaction });
-            const souvenir = await this.models.Souvenir.findById(souvenirId);
-            const reviewCount = await this.models.Review.count({
-                where: { souvenirId: souvenir.id }
+            const reviewsCount = await this.models.Review.count({
+                where: { souvenirId }
             });
-            rating = (rating + souvenir.dataValues.rating * (reviewCount - 1)) / reviewCount;
+            const souvenir = await this.models.Souvenir.findById(souvenirId);
+            rating = (souvenir.dataValues.rating * reviewsCount + rating) / (reviewsCount + 1);
             await souvenir.update({ rating }, { transaction });
         });
     }

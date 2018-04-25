@@ -21,10 +21,7 @@ const Cart = sequelize.import('models/cart');
 const User = sequelize.import('models/user');
 
 // Ваши relations между моделями :)
-User.hasMany(Review, {
-    foreignKey: 'userId',
-    targetKey: 'id'
-});
+Review.belongsTo(User);
 Souvenir.hasMany(Review, {
     foreignKey: 'souvenirId',
     targetKey: 'id'

@@ -23,12 +23,15 @@ module.exports = (sequelize, DataTypes) => {
         souvenirId: {
             type: DataTypes.INTEGER,
             foreignKey: true,
-            allowNull: false
+            allowNull: true
         },
         userId: {
             type: DataTypes.INTEGER,
-            foreignKey: true,
-            allowNull: false
+            references: {
+                model: 'users',
+                key: 'id'
+            },
+            allowNull: true
         }
     }, {
         timestamps: true,
