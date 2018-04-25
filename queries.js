@@ -112,7 +112,7 @@ class Queries {
         // содержит login, text, rating - из аргументов.
         // Обратите внимание, что при добавлении отзыва рейтинг сувенира должен быть пересчитан,
         // и всё это должно происходить за одну транзакцию (!).
-        const user = await this.user.findOne({ where: { login } });
+        const user = await this.user.findOne({ where: { login }, attributes: ['id'] });
         const souvenir = await this.souvenir.findById(souvenirId);
         const reviews = await souvenir.getReviews();
         const newRating = (souvenir.rating * reviews.length + rating) / (reviews.length + 1);
