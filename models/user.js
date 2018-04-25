@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         login: {
             type: DataTypes.TEXT,
-            allowNull: true,
+            allowNull: false,
             unique: true
         }
     });
