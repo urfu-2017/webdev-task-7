@@ -14,26 +14,24 @@ module.exports = (sequelize, DataTypes) => {
         },
         rating: {
             type: DataTypes.INTEGER,
-            allowNull: true
+            allowNull: true,
+            validate: { min: 0, max: 5 }
         },
         isApproved: {
             type: DataTypes.BOOLEAN,
-            allowNull: true,
             defaultValue: false
         },
         souvenirId: {
             type: DataTypes.INTEGER,
-            allowNull: true,
             references: {
-                model: 'souvenirs',
+                model: sequelize.models.Souvenir,
                 key: 'id'
             }
         },
         userId: {
             type: DataTypes.INTEGER,
-            allowNull: true,
             references: {
-                model: 'users',
+                model: sequelize.models.User,
                 key: 'id'
             }
         }
