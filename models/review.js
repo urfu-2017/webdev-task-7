@@ -18,18 +18,10 @@ module.exports = (sequelize, DataTypes) => {
         },
         text: DataTypes.TEXT,
         souvenirId: {
-            type: DataTypes.INTEGER,
-            references: {
-                model: 'souvenirs',
-                key: 'id'
-            }
+            type: DataTypes.INTEGER
         },
         userId: {
-            type: DataTypes.INTEGER,
-            references: {
-                model: 'users',
-                key: 'id'
-            }
+            type: DataTypes.INTEGER
         }
     });
 };

@@ -25,11 +25,7 @@ module.exports = (sequelize, DataTypes) => {
             validate: { min: 0, max: 5 }
         },
         countryId: {
-            type: DataTypes.INTEGER,
-            references: {
-                model: 'countries',
-                key: 'id'
-            }
+            type: DataTypes.INTEGER
         }
     }, {
         indexes: [{

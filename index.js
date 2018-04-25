@@ -26,7 +26,7 @@ Souvenir.belongsTo(Country);
 
 Review.belongsTo(User);
 
-Cart.belongsTo(User, { foreignKey: 'userId' });
+Cart.belongsTo(User);
 Cart.belongsToMany(Souvenir, { through: 'cart_souvenirs' });
 
 module.exports.sequelize = sequelize;
