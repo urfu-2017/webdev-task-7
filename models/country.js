@@ -1,5 +1,9 @@
 'use strict';
 
 module.exports = (sequelize, DataTypes) => {
-    // Ваша модель страны
+    return sequelize.define('country', {
+        id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+        name: DataTypes.STRING
+    },
+    { timestamps: true });
 };
