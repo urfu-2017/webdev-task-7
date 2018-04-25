@@ -31,7 +31,10 @@ module.exports = (sequelize, DataTypes) => {
         },
         countryId: {
             type: DataTypes.INTEGER,
-            foreignKey: true
+            references: {
+                model: 'countries',
+                key: 'id'
+            }
         }
     }, {
         timestamps: true,
