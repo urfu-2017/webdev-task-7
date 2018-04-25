@@ -3,7 +3,9 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint .",
-    "test": "npm run lint"
+    "test": "npm run lint",
+    "ss": "C:\\PROGRA~1\\PostgreSQL\\10\\bin\\psql.exe -h localhost -p 5432 --username postgres -f dump/dump.backup",
+    "start": "node playground.js"
   },
   "dependencies": {
     "dotenv": "5.0.1",
