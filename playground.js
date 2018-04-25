@@ -10,7 +10,7 @@ const Queries = require('./queries');
 
     try {
         // Здесь можно делать запросы, чтобы проверять, что они правильно работают
-        const result = await queries.getCartSum('superman');
+        const result = await queries.getAllSouvenirs();
 
         console.info(result);
     } catch (error) {
@@ -19,14 +19,3 @@ const Queries = require('./queries');
 
     await sequelize.close();
 })();
-
-/**
- * Преобразует массив, найденных значений с помощью findAll, в человекочитаемый видs
- * @param {Promise} response
- * @returns {Promise}
- */
-// eslint-disable-next-line no-unused-vars
-async function makePlain(response) {
-    return (await response).map(el => el.get({ plain: true }));
-}
-
