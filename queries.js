@@ -24,7 +24,7 @@ class Queries {
         // Данный метод должен возвращать все сувениры, цена которых меньше или равна price.
         return this.Souvenir.findAll({
             where: {
-                price: { [this.Op.lt]: price }
+                price: { [this.Op.lte]: price }
             }
         });
     }
@@ -44,7 +44,9 @@ class Queries {
             attributes: ['id', 'name', 'image', 'price', 'rating'],
             include: {
                 model: this.Tag,
-                where: { name: tag },
+                where: {
+                    name: { [this.Op.iLike]: `${tag}` }
+                },
                 attributes: []
             }
         });
@@ -64,7 +66,9 @@ class Queries {
             },
             include: [{
                 model: this.Country,
-                where: { name: country },
+                where: {
+                    name: { [this.Op.iLike]: `${country}` }
+                },
                 attributes: []
             }]
         });
@@ -139,7 +143,9 @@ class Queries {
                 },
                 {
                     model: this.User,
-                    where: { login }
+                    where: {
+                        login: { [this.Op.iLike]: `${login}` }
+                    }
                 }
             ]
         });

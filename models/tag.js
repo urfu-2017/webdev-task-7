@@ -11,5 +11,7 @@ module.exports = (sequelize, DataTypes) => {
         name: {
             type: DataTypes.TEXT
         }
+    }, {
+        indexes: [{ fields: ['name'] }]
     });
 };
