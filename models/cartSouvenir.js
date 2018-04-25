@@ -15,7 +15,10 @@ module.exports = (sequelize, DataTypes) => {
             }
         },
         {
-            timestamps: true
+            timestamps: true,
+            indexes: [
+                { fields: ['cartId', 'souvenirId'] }
+            ]
         }
     );
 };

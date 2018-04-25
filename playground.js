@@ -10,10 +10,7 @@ const Queries = require('./queries');
 
     try {
         // Здесь можно делать запросы, чтобы проверять, что они правильно работают
-        const result = await queries.addReview(
-            1,
-            { login: 'batgirl', text: 'start', rating: -1005000 }
-        );
+        const result = await queries.getCartSum('superman');
 
         console.info(result);
     } catch (error) {
@@ -24,6 +21,7 @@ const Queries = require('./queries');
 })();
 
 /**
+ * Преобразует массив, найденных значений с помощью findAll, в человекочитаемый видs
  * @param {Promise} response
  * @returns {Promise}
  */

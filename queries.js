@@ -1,7 +1,5 @@
 'use strict';
 
-const SIGNS_DOUBLE_PRECISION = 15;
-
 
 class Queries {
     constructor(models) {
@@ -171,7 +169,7 @@ class Queries {
      */
     addReview(souvenirId, { login, text, rating }) {
         return this.sequelize.transaction(async t => {
-            let souvenir = await this.models.Souvenir.findById(
+            const souvenir = await this.models.Souvenir.findById(
                 souvenirId,
                 {
                     include: [
@@ -179,18 +177,15 @@ class Queries {
                     ]
                 }
             );
-            let newRating = (souvenir.reviews.reduce((accumulator, review) => {
-                return accumulator + review.dataValues.rating;
-            }, 0) + rating) / (souvenir.reviews.length + 1);
-            newRating = Number(newRating.toPrecision(SIGNS_DOUBLE_PRECISION));
+            const newRating = (souvenir.rating * souvenir.reviews.length + rating) /
+                (souvenir.reviews.length + 1);
             souvenir.update(
                 { rating: newRating },
                 { transaction: t }
             );
-            let user = await this.models.User.findOne({ where: { login } });
-            user = user.dataValues;
+            const user = await this.models.User.findOne({ where: { login } });
             await this.models.Review.create(
-                { text, rating, souvenirId, userId: user.id },
+                { text, rating, souvenirId, userId: user.dataValues.id },
                 { transaction: t }
             );
         });
@@ -202,19 +197,15 @@ class Queries {
      * @returns {Promise}
      */
     async getCartSum(login) {
-        const user = await this.models.User.findOne({ where: { login } });
-        const userId = user.dataValues.id;
-        let souvenirs = await this.models.Cart.find({
-            include: [{ model: this.models.Souvenir }],
-            where: { userId }
+        return this.models.Cart.sum('souvenirs.price', {
+            include: [
+                {
+                    model: this.models.User,
+                    where: { login }
+                },
+                { model: this.models.Souvenir }],
+            includeIgnoreAttributes: false
         });
-        souvenirs = souvenirs.dataValues.souvenirs;
-
-        const sum = souvenirs.reduce((accumulator, souvenir) => {
-            return accumulator + souvenir.dataValues.price;
-        }, 0);
-
-        return Number(sum.toPrecision(SIGNS_DOUBLE_PRECISION));
     }
 }
 
