@@ -1,66 +1,211 @@
 'use strict';
 
+
 class Queries {
     constructor(models) {
-        // Что-нибудь инициализируем в конструкторе
+        this.models = models;
+        this.sequelize = models.sequelize;
+        this.Op = models.sequelize.Op;
     }
 
-    // Далее идут методы, которые вам необходимо реализовать:
-
+    /**
+     * Возвращает все сувениры.
+     * @returns {Promise}
+     */
     getAllSouvenirs() {
-        // Данный метод должен возвращать все сувениры.
+        return this.models.Souvenir.findAll();
     }
 
+    /**
+     * Возвращает все сувениры, цена которых меньше или равна price.
+     * @param {Number} price
+     * @returns {Promise}
+     */
     getCheapSouvenirs(price) {
-        // Данный метод должен возвращать все сувениры, цена которых меньше или равна price.
+        return this.models.Souvenir.findAll(
+            {
+                where: {
+                    price: {
+                        [this.Op.lte]: price
+                    }
+                }
+            }
+        );
     }
 
+    /**
+     * Возвращает топ n сувениров с самым большим рейтингом.
+     * @param {Number} n
+     * @returns {Promise}
+     */
     getTopRatingSouvenirs(n) {
-        // Данный метод должен возвращать топ n сувениров с самым большим рейтингом.
+        return this.models.Souvenir.findAll(
+            {
+                order: [['rating', 'DESC']],
+                limit: n
+            }
+        );
     }
 
+    /**
+     * Возвращает все сувениры, в тегах которых есть tag.
+     * В ответе только поля id, name, image, price и rating.
+     * @param {String} tag
+     * @returns {Promise}
+     */
     getSouvenirsByTag(tag) {
-        // Данный метод должен возвращать все сувениры, в тегах которых есть tag.
-        // Кроме того, в ответе должны быть только поля id, name, image, price и rating.
+        return this.models.Souvenir.findAll(
+            {
+                include: [
+                    {
+                        model: this.models.Tag,
+                        where: {
+                            name: {
+                                [this.Op.eq]: tag
+                            }
+                        },
+                        attributes: []
+                    }
+                ],
+                attributes: ['id', 'name', 'image', 'price', 'rating']
+            }
+        );
     }
 
+    /**
+     * Возвращает количество сувениров, из страны country, с рейтингом больше или равной rating,
+     * и ценой меньше или равной price.
+     * @param {String} country
+     * @param {Number} rating
+     * @param {Number} price
+     * @returns {Promise}
+     */
     getSouvenirsCount({ country, rating, price }) {
-        // Данный метод должен возвращать количество сувениров,
-        // из страны country, с рейтингом больше или равной rating,
-        // и ценой меньше или равной price.
-
-        // Важно, чтобы метод работал очень быстро,
-        // поэтому учтите это при определении моделей (!).
+        return this.models.Souvenir.count({
+            include: [
+                {
+                    model: this.models.Country,
+                    where: {
+                        name: country
+                    }
+                }
+            ],
+            where: {
+                rating: {
+                    [this.Op.gte]: rating
+                },
+                price: {
+                    [this.Op.lte]: price
+                }
+            }
+        });
     }
 
+    /**
+     * Возвращает все сувениры, в название которых входит подстрока substring.
+     * Поиск регистронезависимый.
+     * @param {String} substring
+     * @returns {Promise}
+     */
     searchSouvenirs(substring) {
-        // Данный метод должен возвращать все сувениры, в название которых входит
-        // подстрока substring. Поиск должен быть регистронезависимым.
+        return this.models.Souvenir.findAll(
+            {
+                where: {
+                    name: {
+                        [this.Op.iRegexp]: `${substring}`
+                    }
+                }
+            }
+        );
     }
 
-    getDisscusedSouvenirs(n) {
-        // Данный метод должен возвращать все сувениры, имеющих >= n отзывов.
-        // Кроме того, в ответе должны быть только поля id, name, image, price и rating.
+    /**
+     * Возвращает все сувениры, имеющих >= n отзывов.
+     * В ответе только поля name, image, price и rating.
+     * @param {Number} n
+     * @returns {Promise}
+     */
+    async getDisscusedSouvenirs(n) {
+        return this.models.Souvenir.findAll(
+            {
+                include: [
+                    {
+                        model: this.models.Review,
+                        attributes: []
+                    }
+                ],
+                attributes: ['name', 'image', 'price', 'rating'],
+                order: ['id'],
+                group: 'souvenirs.id',
+                having: this.sequelize.where(
+                    this.sequelize.fn('COUNT', this.sequelize.col('reviews.id')), '>=', n
+                )
+            }
+        );
     }
 
+    /**
+     * Удаляет все сувениры, которых нет в наличии (то есть amount = 0).
+     * Возвращать количество удаленных сувениров в случае успешного удаления.
+     * @returns {Promise}
+     */
     deleteOutOfStockSouvenirs() {
-        // Данный метод должен удалять все сувениры, которых нет в наличии
-        // (то есть amount = 0).
-
-        // Метод должен возвращать количество удаленных сувениров в случае успешного удаления.
+        return this.models.Souvenir.destroy({
+            where: {
+                amount: 0
+            }
+        });
     }
 
+    /**
+     * Добавляет отзыв к сувениру souvenirId
+     * При добавлении отзыва рейтинг сувенира пересчитывается
+     * Всё это происходит за одну транзакцию
+     * @param {Number} souvenirId
+     * @param {String} login
+     * @param {String} text
+     * @param {Number} rating
+     * @returns {Promise}
+     */
     addReview(souvenirId, { login, text, rating }) {
-        // Данный метод должен добавлять отзыв к сувениру souvenirId
-        // содержит login, text, rating - из аргументов.
-        // Обратите внимание, что при добавлении отзыва рейтинг сувенира должен быть пересчитан,
-        // и всё это должно происходить за одну транзакцию (!).
+        return this.sequelize.transaction(async t => {
+            const souvenir = await this.models.Souvenir.findById(
+                souvenirId,
+                {
+                    include: [
+                        { model: this.models.Review }
+                    ]
+                }
+            );
+            const newRating = (souvenir.rating * souvenir.reviews.length + rating) /
+                (souvenir.reviews.length + 1);
+            souvenir.update(
+                { rating: newRating },
+                { transaction: t }
+            );
+            const user = await this.models.User.findOne({ where: { login } });
+            await this.models.Review.create(
+                { text, rating, souvenirId, userId: user.dataValues.id },
+                { transaction: t }
+            );
+        });
     }
 
-    getCartSum(login) {
-        // Данный метод должен считать общую стоимость корзины пользователя login
-        // У пользователя может быть только одна корзина, поэтому это тоже можно отразить
-        // в модели.
+    /**
+     * Считает общую стоимость корзины пользователя login
+     * @param {String} login
+     * @returns {Promise}
+     */
+    async getCartSum(login) {
+        return this.models.Cart.sum('souvenirs.price', {
+            include: [
+                {
+                    model: this.models.User,
+                    where: { login }
+                },
+                { model: this.models.Souvenir }],
+            includeIgnoreAttributes: false
+        });
     }
 }
 
