@@ -13,9 +13,9 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: 0,
             validate: { min: 0 }
         },
-        image: DataTypes.STRING,
+        image: DataTypes.TEXT,
         isRecent: DataTypes.BOOLEAN,
-        name: DataTypes.STRING,
+        name: DataTypes.TEXT,
         price: {
             type: DataTypes.DOUBLE,
             validate: { min: 0 }

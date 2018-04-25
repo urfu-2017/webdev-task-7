@@ -117,10 +117,12 @@ class Queries {
         const reviews = await souvenir.getReviews();
         const newRating = (souvenir.rating * reviews.length + rating) / (reviews.length + 1);
 
-        return this.sequelize.transaction(async transaction => {
+        await this.sequelize.transaction(async transaction => {
             await souvenir.createReview({ userId: user.id, text, rating }, { transaction });
             await souvenir.update({ rating: newRating }, { transaction });
         });
+
+        return this.souvenir.findById(souvenirId);
     }
 
     async getCartSum(login) {
