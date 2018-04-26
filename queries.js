@@ -63,7 +63,8 @@ module.exports = class {
             },
             having: this.sequelize.where(count('reviews.id'), '>=', n),
             attributes: ['name', 'image', 'price', 'rating'],
-            group: ['souvenirs.id']
+            group: ['souvenirs.id'],
+            order: 'id'
         });
     }
 
