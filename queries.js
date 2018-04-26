@@ -62,22 +62,19 @@ class Queries {
         });
     }
 
-    async getDisscusedSouvenirs(n) {
-        const souvenirs = this.Souvenir.findAll({
+    getDisscusedSouvenirs(n) {
+        return this.Souvenir.findAll({
             attributes: ['name', 'image', 'price', 'rating'],
-            include: { model: this.Review }
+            include: {
+                model: this.Review,
+                attributes: []
+            },
+            order: ['id'],
+            group: 'souvenirs.id',
+            having: this.sequelize.where(
+                this.sequelize.fn('COUNT', this.sequelize.col('reviews.id')), '>=', n
+            )
         });
-
-        return souvenirs
-            .filter(souvenir => souvenir.reviews.length >= n)
-            .map(function (s) {
-                return {
-                    name: s.name,
-                    image: s.image,
-                    price: s.price,
-                    rating: s.rating
-                };
-            });
     }
 
     deleteOutOfStockSouvenirs() {
@@ -85,33 +82,39 @@ class Queries {
     }
 
     addReview(souvenirId, { login, text, rating }) {
-        /* eslint-disable no-unused-vars */
-        return this.sequelize.transaction(async t => {
+        return this.sequelize.transaction(async transaction => {
             const author = await this.User.findOne({ where: { login } });
             const souvenir = await this.Souvenir.findById(souvenirId);
 
-            const newReview = await this.Review.create({ text, rating });
-            author.addReview(newReview);
-            souvenir.addReview(newReview);
-            await newReview.save();
+            await this.Review.create({
+                text,
+                rating,
+                souvenirId: souvenir.id,
+                userId: author.id
+            }, { transaction });
 
-            return await this._updateRating(souvenir, rating);
+            return this._updateRating(souvenir, rating, transaction);
         });
     }
 
-    async _updateRating(souvenir, addedRating) {
-        const reviews = await souvenir.getReviews();
+    async _updateRating(souvenir, addedRating, transaction) {
+        const reviews = await souvenir.getReviews({ transaction });
         const newRating = (souvenir.rating * reviews.length + addedRating) / (reviews.length + 1);
 
-        return await souvenir.update({ rating: newRating });
+        return souvenir.update({ rating: newRating }, { transaction });
     }
 
     async getCartSum(login) {
-        const user = await this.User.findOne({ where: { login } });
-        const cart = await user.getCart();
-        const souvenirs = await cart.getSouvenirs();
-
-        return souvenirs.reduce((sum, souvenir) =>sum + souvenir.price * souvenir.amount, 0);
+        return this.Cart.sum('souvenirs.price', {
+            includeIgnoreAttributes: false,
+            include: [
+                {
+                    model: this.User,
+                    where: { login }
+                },
+                { model: this.Souvenir }
+            ]
+        });
     }
 }
 
