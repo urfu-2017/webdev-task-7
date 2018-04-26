@@ -1,5 +1,9 @@
 'use strict';
 
 module.exports = (sequelize, DataTypes) => {
-    // Ваша модель тэга
+    return sequelize.define('tag', {
+        id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+        name: DataTypes.STRING
+    },
+    { timestamps: true });
 };
