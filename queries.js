@@ -86,7 +86,7 @@ class Queries {
         let reviews = (await this._models.Review.findAll({
             group: 'souvenirId',
             attributes: ['souvenirId', [Sequelize.fn('count', 'souvenirId'), 'reviewsCount']]
-        })).filter(souv => Number(souv.get('reviewsCount')) >= n);
+        })).filter(souv => Number(souv.get('reviewsCount')) >= n && souv.souvenirId !== null);
 
         return Promise.all(
             reviews.map(async review => await this._models.Souvenir.findById(review.souvenirId, {
