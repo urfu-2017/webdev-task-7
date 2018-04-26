@@ -4,19 +4,15 @@ module.exports = (sequelize, DataTypes) => sequelize.define('souvenir_tags',
     {
         souvenirId: {
             type: DataTypes.INTEGER,
-            allowNull: false,
-            primaryKey: true
+            allowNull: false
         },
         tagId: {
             type: DataTypes.INTEGER,
-            allowNull: false,
-            primaryKey: true
+            allowNull: false
         }
     },
     {
         timestamps: true,
-        indexes: [
-            { fields: ['souvenirId', 'tagId'] }
-        ]
+        indexes: [{ fields: ['souvenirId', 'tagId'] }]
     }
 );

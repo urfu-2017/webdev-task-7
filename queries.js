@@ -16,11 +16,20 @@ module.exports = class {
     }
 
     getCheapSouvenirs(price) {
-        return this.Souvenir.findAll({ where: { price: { [this.sequelize.Op.lte]: price } } });
+        return this.Souvenir.findAll({
+            where: {
+                price: {
+                    [this.sequelize.Op.lte]: price
+                }
+            }
+        });
     }
 
     getTopRatingSouvenirs(n) {
-        return this.Souvenir.findAll({ order: [['rating', 'DESC']], limit: n });
+        return this.Souvenir.findAll({
+            order: [['rating', 'DESC']],
+            limit: n
+        });
     }
 
     getSouvenirsByTag(tag) {
@@ -48,9 +57,13 @@ module.exports = class {
     }
 
     searchSouvenirs(substring) {
-        return this.Souvenir.findAll({ where: { name: {
-            [this.sequelize.Op.iLike]: `%${substring}%`
-        } } });
+        return this.Souvenir.findAll({
+            where: {
+                name: {
+                    [this.sequelize.Op.iLike]: `%${substring}%`
+                }
+            }
+        });
     }
 
     getDisscusedSouvenirs(n) {

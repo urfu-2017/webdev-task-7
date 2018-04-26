@@ -9,8 +9,8 @@ const Queries = require('./queries');
     const queries = new Queries(models);
 
     try {
-        const result = await queries.getSouvenirsByTag('редкий');
-        console.info(result.map(i => i.dataValues));
+        const result = await queries.getAllSouvenirs();
+        console.info(result);
     } catch (error) {
         console.error(error);
     }

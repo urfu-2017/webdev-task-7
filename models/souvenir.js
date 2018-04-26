@@ -22,12 +22,8 @@ module.exports = (sequelize, DataTypes) => sequelize.define('souvenirs',
             type: DataTypes.INTEGER,
             defaultValue: 0
         },
-        isRecent: {
-            type: DataTypes.BOOLEAN
-        },
-        countryId: {
-            type: DataTypes.INTEGER
-        }
+        isRecent: DataTypes.BOOLEAN,
+        countryId: DataTypes.INTEGER
     },
     {
         timestamps: true,

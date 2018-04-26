@@ -7,8 +7,5 @@ module.exports = (sequelize, DataTypes) => sequelize.define('countries', {
         autoIncrement: true,
         allowNull: false
     },
-    name: {
-        type: DataTypes.TEXT,
-        allowNull: true
-    }
+    name: DataTypes.TEXT
 });
