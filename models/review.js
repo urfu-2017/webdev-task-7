@@ -1,8 +1,5 @@
 'use strict';
 
-const User = require('./user');
-const Souvenir = require('./souvenir');
-
 module.exports = (sequelize, DataTypes) => sequelize.define('reviews', {
     id: {
         type: DataTypes.INTEGER,
@@ -18,10 +15,10 @@ module.exports = (sequelize, DataTypes) => sequelize.define('reviews', {
     },
     souvenirId: {
         type: DataTypes.INTEGER,
-        references: { model: Souvenir, key: 'id' }
+        references: { model: 'souvenirs', key: 'id' }
     },
     userId: {
         type: DataTypes.INTEGER,
-        references: { model: User, key: 'id' }
+        references: { model: 'users', key: 'id' }
     }
 });

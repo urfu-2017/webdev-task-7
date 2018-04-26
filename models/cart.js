@@ -1,7 +1,5 @@
 'use strict';
 
-const User = require('./user');
-
 module.exports = (sequelize, DataTypes) => sequelize.define('carts', {
     id: {
         type: DataTypes.INTEGER,
@@ -11,6 +9,6 @@ module.exports = (sequelize, DataTypes) => sequelize.define('carts', {
     },
     userId: {
         type: DataTypes.INTEGER,
-        references: { model: User, key: 'id' }
+        references: { model: 'users', key: 'id' }
     }
 });

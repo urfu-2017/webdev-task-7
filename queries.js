@@ -67,14 +67,13 @@ module.exports = class {
     }
 
     getDisscusedSouvenirs(n) {
-        const count = field => this.sequelize.fn('COUNT', this.sequelize.col(field));
-
         return this.Souvenir.findAll({
             include: {
                 model: this.Review,
                 attributes: []
             },
-            having: this.sequelize.where(count('reviews.id'), '>=', n),
+            having: this.sequelize.where(this.sequelize.fn('COUNT',
+                this.sequelize.col('reviews.id')), '>=', n),
             attributes: ['name', 'image', 'price', 'rating'],
             group: ['souvenirs.id'],
             order: ['id']
