@@ -8,7 +8,10 @@ module.exports = (sequelize, DataTypes) => sequelize.define('reviews', {
         allowNull: false
     },
     text: DataTypes.TEXT,
-    rating: DataTypes.INTEGER,
+    rating: {
+        type: DataTypes.INTEGER,
+        validate: { max: 5, min: 0 }
+    },
     isApproved: {
         type: DataTypes.BOOLEAN,
         defaultValue: false
