@@ -10,7 +10,10 @@ module.exports = (sequelize, DataTypes) => {
         },
         text: DataTypes.TEXT,
         rating: DataTypes.SMALLINT,
-        isApproved: DataTypes.BOOLEAN,
+        isApproved: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
+        },
         souvenirId: {
             type: DataTypes.INTEGER,
             foreignKey: true

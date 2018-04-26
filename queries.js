@@ -37,7 +37,8 @@ class Queries {
                 model: this._models.Tag,
                 where: {
                     name: tag
-                }
+                },
+                attributes: []
             },
             attributes: ['id', 'name', 'image', 'price', 'rating']
         });
@@ -74,7 +75,7 @@ class Queries {
         return this._models.Souvenir.findAll({
             where: {
                 name: {
-                    [Op.like]: `%${substring}%`
+                    [Op.iLike]: `%${substring}%`
                 }
             }
         });
@@ -83,15 +84,20 @@ class Queries {
     }
 
     async getDisscusedSouvenirs(n) {
-        let reviews = (await this._models.Review.findAll({
-            group: 'souvenirId',
-            attributes: ['souvenirId', [Sequelize.fn('count', 'souvenirId'), 'reviewsCount']]
-        })).filter(souv => Number(souv.get('reviewsCount')) >= n && souv.souvenirId !== null);
-
-        return Promise.all(
-            reviews.map(async review => await this._models.Souvenir.findById(review.souvenirId, {
-                attributes: ['id', 'name', 'image', 'price', 'rating']
-            })));
+        return this._models.Souvenir.findAll({
+            attributes: ['name', 'image', 'price', 'rating'],
+            include: {
+                model: this._models.Review,
+                attributes: []
+            },
+            order: ['id'],
+            group: 'souvenir.id',
+            having: this._models.sequelize.where(
+                this._models.sequelize.fn('COUNT', 'reviews.id'), {
+                    [Op.gte]: n
+                }
+            )
+        });
         // Данный метод должен возвращать все сувениры, имеющих >= n отзывов.
         // Кроме того, в ответе должны быть только поля id, name, image, price и rating.
     }
@@ -127,11 +133,7 @@ class Queries {
                 transaction: tr
             });
 
-            const souvenir = this._models.findOne({
-                where: {
-                    id: souvenirId
-                }
-            });
+            const souvenir = await this._models.Souvenir.findById(souvenirId, { transaction: tr });
 
             souvenir.rating = reviews.map(review => review.rating)
                 .reduce((sum, current) => sum + current, 0) / reviews.length;
