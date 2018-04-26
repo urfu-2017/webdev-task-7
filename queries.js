@@ -147,23 +147,20 @@ class Queries {
     }
 
     async getCartSum(login) {
-        const cart = await this._models.Cart.findOne({
-            include: {
-                model: this._models.User,
-                where: { login }
-            }
-        });
-
-        const souvenirs = await this._models.Souvenir.findAll({
-            include: {
-                model: this._models.Cart,
-                where: {
-                    id: cart.id
+        return this._models.Cart.sum('souvenirs.price', {
+            includeIgnoreAttributes: false,
+            include: [
+                {
+                    model: this._models.User,
+                    where: { login },
+                    attributes: []
+                },
+                {
+                    model: this._models.Souvenir,
+                    attributes: []
                 }
-            }
+            ]
         });
-
-        return souvenirs.map(souvenir => souvenir.price).reduce((sum, cur) => sum + cur, 0);
         // Данный метод должен считать общую стоимость корзины пользователя login
         // У пользователя может быть только одна корзина, поэтому это тоже можно отразить
         // в модели.
