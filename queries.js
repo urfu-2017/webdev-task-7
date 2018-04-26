@@ -29,7 +29,8 @@ module.exports = class {
                 model: this.Tag,
                 where: { name: tag }
             },
-            attributes: ['id', 'name', 'image', 'price', 'rating']
+            attributes: ['id', 'name', 'image', 'price', 'rating'],
+            includeIgnoreAttributes: false
         });
     }
 
