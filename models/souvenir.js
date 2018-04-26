@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = (sequelize, DataTypes) => {
-    return sequelize.define('souvenir', {
+    return sequelize.define('souvenirs', {
         id: {
             type: DataTypes.INTEGER,
             allowNull: false,
@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
             autoIncrement: true
         },
         name: {
-            type: DataTypes.TEXT,
+            type: DataTypes.STRING,
             allowNull: false
         },
         image: DataTypes.TEXT,
@@ -27,17 +27,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.DOUBLE,
             validate: { min: 0, max: 5 }
         },
-        isRecent: DataTypes.BOOLEAN,
-        createdAt: {
-            type: DataTypes.DATE,
-            allowNull: false
-        },
-        updatedAt: {
-            type: DataTypes.DATE,
-            allowNull: false
-        }
+        isRecent: DataTypes.BOOLEAN
     },
     {
+        timestamps: true,
         indexes: [{ unique: true, fields: ['rating', 'price'] }]
     });
 };

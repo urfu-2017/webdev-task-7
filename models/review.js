@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = (sequelize, DataTypes) => {
-    return sequelize.define('review', {
+    return sequelize.define('reviews', {
         id: {
             type: DataTypes.INTEGER,
             allowNull: false,
@@ -16,15 +16,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.DOUBLE,
             validate: { min: 0, max: 5 }
         },
-        text: DataTypes.TEXT,
-        createdAt: {
-            type: DataTypes.DATE,
-            allowNull: false
-        },
-        updatedAt: {
-            type: DataTypes.DATE,
-            allowNull: false
-        }
-    }, {});
+        text: DataTypes.TEXT
+    },
+    {
+        timestamps: true
+    });
 };
 
