@@ -9,12 +9,10 @@ module.exports = class {
         this.Souvenir = models.Souvenir;
         this.Tag = models.Tag;
         this.User = models.User;
-
-        this.addReview = this.addReview.bind(this);
     }
 
     getAllSouvenirs() {
-        return this.Souvenir.all();
+        return this.Souvenir.findAll();
     }
 
     getCheapSouvenirs(price) {

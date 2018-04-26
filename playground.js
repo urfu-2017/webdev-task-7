@@ -9,8 +9,8 @@ const Queries = require('./queries');
     const queries = new Queries(models);
 
     try {
-        const result = await queries.addReview(1, { login: 'punisher', text: '123', rating: 5 });
-        console.info(result);
+        const result = await queries.getCheapSouvenirs(100);
+        console.info(result.map(i => i.dataValues));
     } catch (error) {
         console.error(error);
     }
