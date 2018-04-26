@@ -75,16 +75,20 @@ module.exports = class {
     async addReview(souvenirId, { login, text, rating }) {
         return this.sequelize.transaction(async transaction => {
             const user = await this.User.findOne({ where: { login }, transaction });
-            await user.createReview({ souvenirId, text, rating }, { transaction });
+
+            await this.Review.create({ userId: user.id, souvenirId, text, rating },
+                { transaction });
+
             const souvenir = await this.Souvenir.findOne({
                 where: { id: souvenirId },
                 include: { model: this.Review },
                 transaction
             });
-            souvenir.rating = souvenir.reviews.reduce((acc, i) => acc + i.rating, 0) /
-                souvenir.reviews.length;
 
-            return souvenir.save({ transaction });
+            const sumRating = Math.round(souvenir.rating * (souvenir.reviews.length - 1));
+            const newRating = (sumRating + rating) / (souvenir.reviews.length);
+
+            return souvenir.update({ rating: newRating }, { transaction });
         });
     }
 
