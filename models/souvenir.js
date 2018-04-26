@@ -4,7 +4,8 @@ module.exports = (sequelize, DataTypes) => sequelize.define('souvenirs', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
+        allowNull: false
     },
     name: DataTypes.TEXT,
     price: DataTypes.DOUBLE,
