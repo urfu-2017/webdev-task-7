@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         souvenirId: {
             type: DataTypes.INTEGER,
+            primaryKey: true,
             allowNull: false
         }
     },
