@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false
         },
-        image: DataTypes.TEXT,
+        image: DataTypes.STRING,
         price: {
             type: DataTypes.DOUBLE,
             allowNull: false,
@@ -31,6 +31,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
         timestamps: true,
-        indexes: [{ unique: true, fields: ['rating', 'price'] }]
+        indexes: [{ fields: ['rating', 'price'] }]
     });
 };
