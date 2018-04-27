@@ -110,7 +110,7 @@ class Queries {
         });
     }
 
-    async addReview(souvenirId, { login, rating }) {
+    async addReview(souvenirId, { login, text, rating }) {
         // Данный метод должен добавлять отзыв к сувениру souvenirId
         // содержит login, text, rating - из аргументов.
         // Обратите внимание, что при добавлении отзыва рейтинг сувенира должен быть пересчитан,
@@ -119,7 +119,7 @@ class Queries {
         const souvenir = await this.souvenir.findById(souvenirId);
 
         return this.sequelize.transaction(async transaction => {
-            await souvenir.createReview({ userId: user.id }, { transaction });
+            await souvenir.createReview({ userId: user.id, text, rating }, { transaction });
 
             const reviews = await souvenir.getReviews({ transaction });
             rating = (souvenir.rating * (reviews.length - 1) + rating) / (reviews.length);
