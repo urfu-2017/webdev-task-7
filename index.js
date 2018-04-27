@@ -2,11 +2,15 @@
 
 require('dotenv').config({ path: `${__dirname}/.env` });
 const Sequalize = require('sequelize');
+const cls = require('continuation-local-storage');
+
+const namespace = cls.createNamespace('my-namespace');
+Sequalize.useCLS(namespace);
 
 const sequelize = new Sequalize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {
     host: process.env.DB_HOST,
     dialect: 'postgres',
-    operatorsAliases: false, // если вы будете делать запросы без deprecated алиасов
+    operatorsAliases: false,
     logging: false,
     define: {
         underscored: false
@@ -20,7 +24,14 @@ const Souvenir = sequelize.import('models/souvenir');
 const Cart = sequelize.import('models/cart');
 const User = sequelize.import('models/user');
 
-// Ваши relations между моделями :)
+Souvenir.belongsToMany(Tag, { through: 'souvenir_tags' });
+Souvenir.belongsTo(Country);
+Souvenir.hasMany(Review);
+
+User.hasOne(Cart);
+
+Cart.belongsTo(User);
+Cart.belongsToMany(Souvenir, { through: 'cart_souvenirs' });
 
 module.exports.sequelize = sequelize;
 
