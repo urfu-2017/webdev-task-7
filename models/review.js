@@ -14,23 +14,15 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: false
         },
         rating: {
-            type: DataTypes.DOUBLE,
+            type: DataTypes.INTEGER,
             validate: { min: 0, max: 5 }
         },
         text: DataTypes.TEXT,
         souvenirId: {
-            type: DataTypes.INTEGER,
-            references: {
-                model: 'souvenirs',
-                key: 'id'
-            }
+            type: DataTypes.INTEGER
         },
         userId: {
-            type: DataTypes.INTEGER,
-            references: {
-                model: 'users',
-                key: 'id'
-            }
+            type: DataTypes.INTEGER
         }
     });
 };

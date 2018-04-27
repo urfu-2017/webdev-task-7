@@ -10,11 +10,7 @@ module.exports = (sequelize, DataTypes) => {
             autoIncrement: true
         },
         userId: {
-            type: DataTypes.INTEGER,
-            references: {
-                model: 'users',
-                key: 'id'
-            }
+            type: DataTypes.INTEGER
         }
     });
 };
