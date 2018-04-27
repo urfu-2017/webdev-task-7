@@ -8,15 +8,7 @@ module.exports = (sequelize, DataTypes) => {
             primaryKey: true,
             autoIncrement: true
         },
-        login: DataTypes.STRING,
-        createdAt: {
-            type: DataTypes.DATE,
-            allowNull: false
-        },
-        updatedAt: {
-            type: DataTypes.DATE,
-            allowNull: false
-        }
+        login: DataTypes.STRING
     },
     {
         timestamps: true,
