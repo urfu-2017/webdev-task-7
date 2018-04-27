@@ -15,15 +15,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.BOOLEAN,
             default: false
         },
-        createdAt: {
-            type: DataTypes.DATE,
-            allowNull: false
-        },
-        updatedAt: {
-            type: DataTypes.DATE,
-            allowNull: false
-        },
         souvenirId: DataTypes.INTEGER,
         userId: DataTypes.INTEGER
+    },
+    {
+        timestamp: true
     });
 };

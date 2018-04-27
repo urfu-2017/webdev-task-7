@@ -3,15 +3,20 @@
 module.exports = (sequelize, DataTypes) => {
     // Ваша модель корзины
     return sequelize.define('cart_souvenir', {
-        createdAt: {
-            type: DataTypes.DATE,
+        cartId: {
+            type: DataTypes.INTEGER,
             allowNull: false
         },
-        updatedAt: {
-            type: DataTypes.DATE,
+        souvenirId: {
+            type: DataTypes.INTEGER,
+            primaryKey: true,
             allowNull: false
-        },
-        cartId: DataTypes.INTEGER,
-        souvenirId: DataTypes.INTEGER
+        }
+    },
+    {
+        timestamp: true,
+        indexes: [
+            { fields: ['cartId', 'souvenirId'] }
+        ]
     });
 };

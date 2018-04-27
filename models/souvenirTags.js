@@ -11,14 +11,9 @@ module.exports = (sequelize, DataTypes) => {
         souvenirId: {
             type: DataTypes.INTEGER,
             allowNull: false
-        },
-        createdAt: {
-            type: DataTypes.DATE,
-            allowNull: false
-        },
-        updatedAt: {
-            type: DataTypes.DATE,
-            allowNull: false
         }
+    },
+    {
+        timestamp: true
     });
 };

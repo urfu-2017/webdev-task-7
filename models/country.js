@@ -9,14 +9,9 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             autoIncrement: true
         },
-        name: DataTypes.TEXT,
-        createdAt: {
-            type: DataTypes.DATE,
-            allowNull: false
-        },
-        updatedAt: {
-            type: DataTypes.DATE,
-            allowNull: false
-        }
+        name: DataTypes.TEXT
+    },
+    {
+        timestamp: true
     });
 };

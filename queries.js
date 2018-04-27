@@ -24,11 +24,7 @@ class Queries {
     getCheapSouvenirs(price) {
         // Данный метод должен возвращать все сувениры, цена которых меньше или равна price.
         return this.Souvenir.findAll({
-            where: {
-                price: {
-                    [Op.lte]: price
-                }
-            }
+            where: { price: { [Op.lte]: price } }
         });
     }
 
@@ -65,12 +61,8 @@ class Queries {
         // и ценой меньше или равной price.
         return this.Souvenir.count({
             where: {
-                rating: {
-                    [Op.gte]: rating
-                },
-                price: {
-                    [Op.lte]: price
-                }
+                rating: { [Op.gte]: rating },
+                price: { [Op.lte]: price }
             },
             include: [
                 {
@@ -100,14 +92,16 @@ class Queries {
     getDisscusedSouvenirs(n) {
         // Данный метод должен возвращать все сувениры, имеющих >= n отзывов.
         // Кроме того, в ответе должны быть только поля name, image, price и rating.
-
         return this.Souvenir.findAll({
+            group: 'souvenirs.id',
             attributes: ['name', 'image', 'price', 'rating'],
             include: [{
                 model: this.Review
-            }]
-        }).then(souvenirs => {
-            return souvenirs.filter(souvenir => souvenir.reviews.length === n);
+            }],
+            having: this.sequelize.where(
+                this.sequelize.fn('count', this.sequelize.col('reviews.id')), '>=', n
+            ),
+            includeIgnoreAttributes: false
         });
     }
 
@@ -178,27 +172,19 @@ class Queries {
         // Данный метод должен считать общую стоимость корзины пользователя login
         // У пользователя может быть только одна корзина, поэтому это тоже можно отразить
         // в модели.
-        return this.User.findAll({
-            where: {
-                login: login
-            },
+        return this.Cart.sum('souvenirs.price', {
             include: [
                 {
-                    model: this.Cart,
-                    include: [
-                        {
-                            model: this.Souvenir
-                        }
-                    ]
+                    model: this.User,
+                    where: {
+                        login: login
+                    }
+                },
+                {
+                    model: this.Souvenir
                 }
-            ]
-        }).then(userWithData => {
-            let sum = 0;
-            for (let i = 0; i < userWithData[0].dataValues.cart.dataValues.souvenirs.length; i++) {
-                sum += userWithData[0].dataValues.cart.dataValues.souvenirs[i].price;
-            }
-
-            return sum;
+            ],
+            includeIgnoreAttributes: false
         });
     }
 }

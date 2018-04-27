@@ -24,14 +24,9 @@ module.exports = (sequelize, DataTypes) => {
             default: 0
         },
         isRecent: DataTypes.BOOLEAN,
-        createdAt: {
-            type: DataTypes.DATE,
-            allowNull: false
-        },
-        updatedAt: {
-            type: DataTypes.DATE,
-            allowNull: false
-        },
         countryId: DataTypes.INTEGER
+    },
+    {
+        timestamp: true
     });
 };
