@@ -30,3 +30,17 @@ module.exports.Review = Review;
 module.exports.Souvenir = Souvenir;
 module.exports.Cart = Cart;
 module.exports.User = User;
+
+Cart.belongsTo(User, { foreignKey: 'userId' });
+User.hasMany(Cart, { foreignKey: 'userId' });
+
+Review.belongsTo(User, { foreignKey: 'userId' });
+User.hasMany(Review, { foreignKey: 'userId' });
+
+Souvenir.hasMany(Review, { foreignKey: 'souvenirId' });
+
+Souvenir.belongsTo(Country, { foreignKey: 'countryId' });
+Country.hasMany(Souvenir, { foreignKey: 'countryId' });
+
+Souvenir.belongsToMany(Tag, { through: 'souvenir_tags' });
+Cart.belongsToMany(Souvenir, { through: 'cart_souvenirs' });
