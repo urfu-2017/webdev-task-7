@@ -9,7 +9,10 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             primaryKey: true
         },
-        rating: DataTypes.DOUBLE,
+        rating: {
+            type: DataTypes.DOUBLE,
+            validate: { min: 0, max: 5 }
+        },
         souvenirId: {
             type: DataTypes.INTEGER,
             references: {
