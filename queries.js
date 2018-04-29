@@ -115,10 +115,11 @@ class Queries {
         // содержит login, text, rating - из аргументов.
         // Обратите внимание, что при добавлении отзыва рейтинг сувенира должен быть пересчитан,
         // и всё это должно происходить за одну транзакцию (!).
-        const user = await this.user.findOne({ where: { login } });
-        const souvenir = await this.souvenir.findById(souvenirId);
 
         return this.sequelize.transaction(async transaction => {
+            const user = await this.user.findOne({ where: { login } });
+            const souvenir = await this.souvenir.findById(souvenirId);
+
             await souvenir.createReview({ userId: user.id, text, rating }, { transaction });
 
             const reviews = await souvenir.getReviews({ transaction });
