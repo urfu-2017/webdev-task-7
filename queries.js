@@ -117,8 +117,8 @@ class Queries {
         // и всё это должно происходить за одну транзакцию (!).
 
         return this.sequelize.transaction(async transaction => {
-            const user = await this.user.findOne({ where: { login } });
-            const souvenir = await this.souvenir.findById(souvenirId);
+            const user = await this.user.findOne({ where: { login } }, { transaction });
+            const souvenir = await this.souvenir.findById(souvenirId, { transaction });
 
             await souvenir.createReview({ userId: user.id, text, rating }, { transaction });
 
