@@ -101,14 +101,14 @@ class Queries {
         // Данный метод должен возвращать все сувениры, имеющих >= n отзывов.
         // Кроме того, в ответе должны быть только поля id, name, image, price и rating.
         return this._models.Souvenir.findAll({
-            attributes: ['id', 'name', 'image', 'price', 'rating'],
+            attributes: ['name', 'image', 'price', 'rating'],
             include: {
                 model: this._models.Review,
                 attributes: []
             },
             order: ['id'],
             group: 'souvenir.id',
-            having: this._sequelize.where(this._Sequelize.fn('COUNT', 'reviews.id'), '>=', n)
+            having: this._sequelize.where(this._sequelize.fn('COUNT', 'reviews.id'), '>=', n)
         });
     }
 
@@ -118,7 +118,7 @@ class Queries {
 
         // Метод должен возвращать количество удаленных сувениров в случае успешного удаления.
 
-        return this.models.Souvenir.destroy({
+        return this._models.Souvenir.destroy({
             where: {
                 amount: 0
             }
@@ -163,14 +163,15 @@ class Queries {
                     });
                 })
                 .then((souvenir) => {
-                    const newRating = (souvenir.rating * souvenir.reviews.length + rating) /
-                        (souvenir.reviews.length + 1);
+                    const newRating = (souvenir.rating * (souvenir.reviews.length - 1) + rating) /
+                        souvenir.reviews.length;
                     souvenir.set({
                         rating: newRating
                     }, { transaction });
 
                     return souvenir.save({ transaction });
                 });
+
         });
     }
 
