@@ -9,7 +9,8 @@ module.exports = (sequelize, DataTypes) => {
             autoIncrement: true
         },
         login: {
-            type: DataTypes.TEXT
+            type: DataTypes.TEXT,
+            allowNull: false
         }
     });
 };

@@ -9,33 +9,42 @@ module.exports = (sequelize, DataTypes) => {
             autoIncrement: true
         },
         name: {
-            type: DataTypes.TEXT
+            type: DataTypes.TEXT,
+            allowNull: false
         },
         image: {
             type: DataTypes.TEXT
         },
         price: {
-            type: DataTypes.DOUBLE
+            type: DataTypes.DOUBLE,
+            allowNull: false,
+            validate: { min: 0 }
         },
         rating: {
-            type: DataTypes.DOUBLE
+            type: DataTypes.DOUBLE,
+            allowNull: false,
+            validate: { min: 0, max: 5 }
         },
         amount: {
-            type: DataTypes.INTEGER
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 0,
+            validate: { min: 0 }
         },
         isRecent: {
             type: DataTypes.BOOLEAN
         },
         countryId: {
-            type: DataTypes.INTEGER
+            type: DataTypes.INTEGER,
+            references: {
+                model: 'countries',
+                key: 'id'
+            }
         }
     }, {
         indexes: [
             {
-                fields: ['rating']
-            },
-            {
-                fields: ['price']
+                fields: ['rating', 'price']
             }
         ]
     });
