@@ -3,18 +3,12 @@
 module.exports = (sequelize, DataTypes) => {
     // Ваша модель страны
     return sequelize.define('country', {
-        id: {
-            type: DataTypes.INTEGER,
-            primaryKey: true,
-            autoIncrement: true,
-            allowNull: false,
-            field: 'id'
-        },
         name: {
-            type: DataTypes.TEXT,
-            field: 'name'
+            type: DataTypes.TEXT
         }
     }, {
-        timestamps: true
+        indexes: [{
+            fields: ['name']
+        }]
     });
 };

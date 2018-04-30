@@ -3,46 +3,26 @@
 module.exports = (sequelize, DataTypes) => {
     // Ваша модель сувенира
     return sequelize.define('souvenir', {
-        id: {
-            type: DataTypes.INTEGER,
-            primaryKey: true,
-            autoIncrement: true,
-            allowNull: false,
-            field: 'id'
-        },
         name: {
             type: DataTypes.TEXT,
-            allowNull: false,
-            field: 'name'
+            allowNull: false
         },
         image: {
-            type: DataTypes.TEXT,
-            field: 'image'
+            type: DataTypes.TEXT
         },
         price: {
             type: DataTypes.DOUBLE,
-            allowNull: false,
-            field: 'price'
+            allowNull: false
         },
         rating: {
-            type: DataTypes.DOUBLE,
-            field: 'rating'
+            type: DataTypes.DOUBLE
         },
         amount: {
             type: DataTypes.INTEGER,
-            default: 0,
-            field: 'amount'
+            default: 0
         },
         isRecent: {
-            type: DataTypes.BOOLEAN,
-            field: 'isRecent'
-        },
-        countryId: {
-            type: DataTypes.INTEGER,
-            foreignKey: true,
-            field: 'countryId'
+            type: DataTypes.BOOLEAN
         }
-    }, {
-        timestamps: true
     });
 };

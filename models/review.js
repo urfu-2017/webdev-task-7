@@ -3,37 +3,15 @@
 module.exports = (sequelize, DataTypes) => {
     // Ваша модель отзыва
     return sequelize.define('review', {
-        id: {
-            type: DataTypes.INTEGER,
-            primaryKey: true,
-            autoIncrement: true,
-            allowNull: false,
-            field: 'id'
-        },
         text: {
-            type: DataTypes.TEXT,
-            field: 'text'
+            type: DataTypes.TEXT
         },
         rating: {
-            type: DataTypes.INTEGER,
-            field: 'rating'
+            type: DataTypes.INTEGER
         },
         isApproved: {
             type: DataTypes.BOOLEAN,
-            defaultValue: false,
-            field: 'isApproved'
-        },
-        souvenirId: {
-            type: DataTypes.INTEGER,
-            foreignKey: true,
-            field: 'souvenirId'
-        },
-        userId: {
-            type: DataTypes.INTEGER,
-            foreignKey: true,
-            field: 'userId'
+            defaultValue: false
         }
-    }, {
-        timestamps: true
     });
 };
