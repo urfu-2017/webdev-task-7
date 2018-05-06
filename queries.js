@@ -1,7 +1,5 @@
 'use strict';
 
-const Sequelize = require('sequelize');
-const Op = Sequelize.Op;
 
 class Queries {
     constructor({ sequelize, Country, Tag, Review, Souvenir, Cart, User }) {
@@ -27,7 +25,7 @@ class Queries {
 
         return this.Souvenir.findAll({
             where: {
-                price: { [Op.lte]: price }
+                price: { [this.sequelize.Op.lte]: price }
             }
         });
     }
@@ -69,8 +67,8 @@ class Queries {
 
         return this.Souvenir.count({
             where: {
-                rating: { [Op.gte]: rating },
-                price: { [Op.lte]: price }
+                rating: { [this.sequelize.Op.gte]: rating },
+                price: { [this.sequelize.Op.lte]: price }
             },
             include: {
                 model: this.Country,
@@ -88,7 +86,7 @@ class Queries {
 
         return this.Souvenir.findAll({
             where: {
-                name: { [Op.iRegexp]: substring }
+                name: { [this.sequelize.Op.iRegexp]: substring }
             }
         });
     }
@@ -97,16 +95,25 @@ class Queries {
         // Данный метод должен возвращать все сувениры, имеющих >= n отзывов.
         // Кроме того, в ответе должны быть только поля name, image, price и rating.
 
-        return this.Review.findAll({
-            attributes: ['souvenir.id'],
+        return this.Souvenir.findAll({
+            attributes: [
+                'name',
+                'image',
+                'price',
+                'rating'
+            ],
             include: {
-                model: this.Souvenir,
-                attributes: ['name', 'image', 'price', 'rating']
+                model: this.Review,
+                attributes: []
             },
-            order: Sequelize.col('souvenir.id'),
-            group: ['souvenir.id'],
-            having: Sequelize.where(Sequelize.fn('COUNT', Sequelize.col('souvenir.id')), '>=', n)
-        }).then(souvenirs => souvenirs.map(souvenir => souvenir.souvenir));
+            group: 'souvenir.id',
+            having: this.sequelize.where(
+                this.sequelize.literal('COUNT(DISTINCT(reviews.id))'),
+                {
+                    [this.sequelize.Op.gte]: n
+                }
+            )
+        });
     }
 
     deleteOutOfStockSouvenirs() {
@@ -128,26 +135,26 @@ class Queries {
         // Обратите внимание, что при добавлении отзыва рейтинг сувенира должен быть пересчитан,
         // и всё это должно происходить за одну транзакцию (!).
 
-        return this.sequelize.transaction(async t => {
+        return this.sequelize.transaction(async transaction => {
             const user = await this.User.findOne({
                 where: { login },
-                transaction: t
+                transaction
             });
             await this.Review.create(
                 { text, rating, souvenirId, userId: user.id },
-                { transaction: t });
+                { transaction });
 
             const ratings = (await this.Review.findAll({
                 where: { souvenirId },
-                transaction: t
+                transaction
             })).map(review => review.rating);
 
             const souvenir = await this.Souvenir.findOne({
                 where: { id: souvenirId },
-                transaction: t
+                transaction
             });
             souvenir.rating = ratings.reduce((a, b) => a + b, 0) / ratings.length;
-            await souvenir.save({ transaction: t });
+            await souvenir.save({ transaction });
         });
     }
 

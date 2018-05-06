@@ -2,12 +2,6 @@
 
 module.exports = (sequelize, DataTypes) => {
     return sequelize.define('review', {
-        id: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            primaryKey: true,
-            autoIncrement: true
-        },
         text: {
             type: DataTypes.TEXT
         },
@@ -18,7 +12,5 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.BOOLEAN,
             defaultValue: false
         }
-    }, {
-        timestamps: true
     });
 };
