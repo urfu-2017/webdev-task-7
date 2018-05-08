@@ -101,15 +101,16 @@ class Queries {
             rating
         };
 
-        const transaction = async transaction => {
+        const transactionClosure = async transaction => {
             const reviews = await souvenir.getReviews({ transaction });
-            const updatedRating = (reviews.length * souvenir.rating + rating) / (reviews.length + 1);
+            const updatedRating =
+                (reviews.length * souvenir.rating + rating) / (reviews.length + 1);
 
             await souvenir.createReview(review, { transaction });
             await souvenir.update({ updatedRating }, { transaction });
         };
 
-        return this.sequelize.transaction(transaction);
+        return this.sequelize.transaction(transactionClosure);
     }
 
     getCartSum(login) {
