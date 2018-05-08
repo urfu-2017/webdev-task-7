@@ -90,18 +90,19 @@ class Queries {
     }
 
     async addReview(souvenirId, { login, text, rating }) {
-        const user = await this.User.findOne({
-            where: { login }
-        });
-        const souvenir = await this.Souvenir.findById(souvenirId);
-
-        const review = {
-            userId: user.id,
-            text,
-            rating
-        };
-
         const transactionClosure = async transaction => {
+            const user = await this.User.findOne({
+                where: { login },
+                transaction
+            });
+            const souvenir = await this.Souvenir.findById(souvenirId, { transaction });
+
+            const review = {
+                userId: user.id,
+                text,
+                rating
+            };
+
             await souvenir.createReview(review, { transaction });
 
             const reviews = await souvenir.getReviews({ transaction });
