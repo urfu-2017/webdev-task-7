@@ -103,14 +103,13 @@ class Queries {
                 rating
             };
 
-            await souvenir.createReview(review, { transaction });
-
             const reviews = await souvenir.getReviews({ transaction });
-            const updatedRating = reviews
-                .map(rev => rev.rating)
-                .reduce((acc, cur) => acc + cur, 0) / reviews.length;
+            const updatedRating =
+                (reviews.length * souvenir.rating + rating) / (reviews.length + 1);
 
-            return souvenir.update({ rating: updatedRating }, { transaction });
+            await souvenir.update({ rating: updatedRating }, { transaction });
+
+            return souvenir.createReview(review, { transaction });
         };
 
         return this.sequelize.transaction(transactionClosure);
