@@ -1,5 +1,24 @@
 'use strict';
 
 module.exports = (sequelize, DataTypes) => {
-    // Ваша модель корзины
+    return sequelize.define('carts', {
+        id: {
+            type: DataTypes.INTEGER,
+            primaryKey: true,
+            autoIncrement: true,
+            allowNull: false
+        },
+        userId: {
+            type: DataTypes.INTEGER,
+            unique: true,
+            references: {
+                model: 'users',
+                key: 'id'
+            },
+            allowNull: false
+        }
+    },
+    {
+        timestamps: true
+    });
 };
