@@ -2,12 +2,6 @@
 
 module.exports = (sequelize, DataTypes) => {
     return sequelize.define('souvenirs', {
-        id: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            primaryKey: true,
-            autoIncrement: true
-        },
         name: DataTypes.TEXT,
         image: DataTypes.TEXT,
         price: {
