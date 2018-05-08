@@ -110,7 +110,7 @@ class Queries {
                 .map(rev => rev.rating)
                 .reduce((acc, cur) => acc + cur, 0) / reviews.length;
 
-            await souvenir.update({ updatedRating }, { transaction });
+            return souvenir.update({ rating: updatedRating }, { transaction });
         };
 
         return this.sequelize.transaction(transactionClosure);
