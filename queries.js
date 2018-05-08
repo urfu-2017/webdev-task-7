@@ -102,11 +102,13 @@ class Queries {
         };
 
         const transactionClosure = async transaction => {
-            const reviews = await souvenir.getReviews({ transaction });
-            const updatedRating =
-                (reviews.length * souvenir.rating + rating) / (reviews.length + 1);
-
             await souvenir.createReview(review, { transaction });
+
+            const reviews = await souvenir.getReviews({ transaction });
+            const updatedRating = reviews
+                .map(rev => rev.rating)
+                .reduce((acc, cur) => acc + cur, 0) / reviews.length;
+
             await souvenir.update({ updatedRating }, { transaction });
         };
 
