@@ -1,5 +1,10 @@
 'use strict';
 
 module.exports = (sequelize, DataTypes) => {
-    // Ваша модель корзины
+    return sequelize.define('cart', {
+        userId: {
+            type: DataTypes.INTEGER,
+            foreignKey: true
+        }
+    });
 };
