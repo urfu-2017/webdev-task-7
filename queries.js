@@ -148,17 +148,15 @@ class Queries {
         // Данный метод должен считать общую стоимость корзины пользователя login
         // У пользователя может быть только одна корзина, поэтому это тоже можно отразить
         // в модели.
-        const cart = await this._Cart.findOne({
-            include: [
-                { model: this._User, where: { login } },
-                { model: this._Souvenir }
-            ]
-        });
 
-        const totalPrice = cart.souvenirs.reduce((previousValue, currentSouvenir) =>
-            previousValue + currentSouvenir.price, 0);
-
-        return totalPrice.toFixed(10);
+        return this._sequelize.query(`
+        SELECT SUM(souvenirs.price)
+            FROM users
+                INNER JOIN carts ON carts."userId" = users.id
+                INNER JOIN cart_souvenirs ON carts.id = cart_souvenirs."cartId"
+                INNER JOIN souvenirs ON cart_souvenirs."souvenirId" = souvenirs.id
+            WHERE users.login LIKE '${login}'`
+        ).then(result => result[0][0].sum);
     }
 }
 
