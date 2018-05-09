@@ -22,7 +22,9 @@ class Queries {
 
     getCheapSouvenirs(price) {
         // Данный метод должен возвращать все сувениры, цена которых меньше или равна price.
-        return this.souvenir.findAll({ where: { price: { [this.op.lte]: price } } });
+        return this.souvenir.findAll({
+            where: { price: { [this.op.lte]: price } }
+        });
     }
 
     getTopRatingSouvenirs(n) {
@@ -69,7 +71,7 @@ class Queries {
         // Данный метод должен возвращать все сувениры, в название которых входит
         // подстрока substring. Поиск должен быть регистронезависимым.
         return this.souvenir.findAll({
-            where: { name: { [this.op.contains]: substring } }
+            where: { name: { [this.op.iLike]: `%${substring}%` } }
         });
     }
 
@@ -95,7 +97,9 @@ class Queries {
         // (то есть amount = 0).
 
         // Метод должен возвращать количество удаленных сувениров в случае успешногоудаления.
-        return this.souvenir.destroy({ where: { amount: 0 } });
+        return this.souvenir.destroy({
+            where: { amount: 0 }
+        });
     }
 
     async addReview(souvenirId, { login, text, rating }) {
@@ -125,10 +129,7 @@ class Queries {
             includeIgnoreAttributes: false,
             include: [
                 { model: this.souvenir },
-                {
-                    model: this.user,
-                    where: { login }
-                }
+                { model: this.user, where: { login } }
             ]
         });
     }
