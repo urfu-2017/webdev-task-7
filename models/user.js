@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => sequelize.define('users', {
         primaryKey: true
     },
     login: {
-      type: DataTypes.STRING,
-      unique: true
+        type: DataTypes.STRING,
+        unique: true
     }
 });
