@@ -8,7 +8,10 @@ module.exports = (sequelize, DataTypes) => sequelize.define('souvenirs', {
     },
     name: DataTypes.STRING,
     image: DataTypes.STRING,
-    amount: DataTypes.INTEGER,
+    amount: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0
+    },
     isRecent: DataTypes.BOOLEAN,
     price: DataTypes.FLOAT,
     rating: DataTypes.FLOAT

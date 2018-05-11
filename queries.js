@@ -114,16 +114,18 @@ class Queries {
     // Обратите внимание, что при добавлении отзыва рейтинг сувенира должен быть пересчитан,
     // и всё это должно происходить за одну транзакцию (!).
     async addReview(souvenirId, { login, text, rating }) {
-        const { id: userId } = await this.User.findOne({ where: { login } });
-        const souvenir = await this.Souvenir.findById(souvenirId);
+        return this.sequelize.transaction(async transaction => {
+            const { id: userId } = await this.User.findOne({ where: { login } });
+            const souvenir = await this.Souvenir.findById(souvenirId);
 
-        return this.sequelize.transaction(transaction => souvenir.createReview({
-            userId, text, rating
-        }, { transaction })
-            .then(() => souvenir.getReviews({ transaction }))
-            .then(reviews => souvenir.update({
+            await souvenir.createReview({ userId, text, rating }, { transaction });
+            const reviews = await souvenir.getReviews({ transaction });
+
+            return souvenir.update({
                 rating: (souvenir.rating * (reviews.length - 1) + rating) / reviews.length
-            }, { transaction })));
+            }, { transaction });
+
+        });
     }
 
     // Данный метод должен считать общую стоимость корзины пользователя login
