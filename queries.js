@@ -124,7 +124,6 @@ class Queries {
             return souvenir.update({
                 rating: (souvenir.rating * (reviews.length - 1) + rating) / reviews.length
             }, { transaction });
-
         });
     }
 
