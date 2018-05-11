@@ -39,7 +39,7 @@ class Queries {
                 where: {
                     name: tag
                 },
-                attributes: ['name']
+                attributes: []
             }
         });
     }
@@ -98,15 +98,16 @@ class Queries {
                 { text, rating, souvenirId, userId: user.id },
                 { transaction }
             );
-            const ratings = await this.Review.findAll({
-                where: { souvenirId },
-                transaction
-            });
-
-            const souvenir = await this.Souvenir.findOne({
-                where: { id: souvenirId },
-                transaction
-            });
+            const [ratings, souvenir] = await Promise.all([
+                this.Review.findAll({
+                    where: { souvenirId },
+                    transaction
+                }),
+                this.Souvenir.findOne({
+                    where: { id: souvenirId },
+                    transaction
+                })
+            ]);
 
             souvenir.rating = ratings.map(review => review.rating)
                 .reduce((a, b) => a + b, 0) / ratings.length;
@@ -122,7 +123,9 @@ class Queries {
             ]
         });
 
-        const totalSum = cart.souvenirs.reduce((value, souvenir) => value + souvenir.price, 0);
+        const totalSum = cart.souvenirs
+            .reduce((value, souvenir) => value + souvenir.price, 0)
+            .toFixed(10);
 
         return totalSum;
     }
