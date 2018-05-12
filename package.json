@@ -3,7 +3,8 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint .",
-    "test": "npm run lint"
+    "test": "npm run lint",
+    "start": "node playground.js"
   },
   "dependencies": {
     "dotenv": "5.0.1",
