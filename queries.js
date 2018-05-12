@@ -133,12 +133,15 @@ class Queries {
         const modelSouvenir = this._models.Souvenir;
 
         return this._models.sequelize.transaction(async transaction => {
-            const user = await modelUser.findOne({ where: { login } }, { transaction });
-            const souvenir = await modelSouvenir.findById(souvenirId, { transaction });
+            const [user, souvenir] = await Promise.all([
+                modelUser.findOne({ where: { login } }),
+                modelSouvenir.findById(souvenirId)
+            ]);
             await souvenir.createReview({ userId: user.id, text, rating }, { transaction });
             const reviews = await souvenir.getReviews({ transaction });
             rating = (souvenir.rating * (reviews.length - 1) + rating) / (reviews.length);
-            await souvenir.update({ rating }, { transaction });
+
+            return souvenir.update({ rating }, { transaction });
         });
     }
 
