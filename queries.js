@@ -79,6 +79,7 @@ class Queries {
                 model: this.models.Review,
                 attributes: []
             },
+            order: ['id'],
             group: ['souvenir.id'],
             having: where(
                 fn('COUNT', 'review.id'), '>=', n
