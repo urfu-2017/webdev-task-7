@@ -1,11 +1,10 @@
 'use strict';
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 
 class Queries {
     constructor(models) {
         this._models = models;
-        this._Op = models.sequelize.Op;
-        this._sequelize = models.sequelize;
-        // Что-нибудь инициализируем в конструкторе
     }
 
     // Далее идут методы, которые вам необходимо реализовать:
@@ -22,7 +21,7 @@ class Queries {
         return this._models.Souvenir.findAll({
             where: {
                 price: {
-                    [this._Op.lte]: price
+                    [Op.lte]: price
                 }
             }
         });
@@ -75,10 +74,10 @@ class Queries {
                 ],
                 where: {
                     rating: {
-                        [this._Op.gte]: rating
+                        [Op.gte]: rating
                     },
                     price: {
-                        [this._Op.lte]: price
+                        [Op.lte]: price
                     }
                 }
             }
@@ -91,7 +90,7 @@ class Queries {
         return this._models.Souvenir.findAll({
             where: {
                 name: {
-                    [this._Op.iLike]: `%${substring}%`
+                    [Op.iLike]: `%${substring}%`
                 }
             }
         });
@@ -108,7 +107,7 @@ class Queries {
             },
             order: ['id'],
             group: 'souvenir.id',
-            having: this._sequelize.where(this._sequelize.fn('COUNT', 'reviews.id'), '>=', n)
+            having: Sequelize.where(Sequelize.fn('COUNT', 'reviews.id'), '>=', n)
         });
     }
 
@@ -131,47 +130,15 @@ class Queries {
         // Обратите внимание, что при добавлении отзыва рейтинг сувенира должен быть пересчитан,
         // и всё это должно происходить за одну транзакцию (!).
         const modelUser = this._models.User;
-        const modelReview = this._models.Review;
         const modelSouvenir = this._models.Souvenir;
 
-        return this._sequelize.transaction(transaction => {
-            return modelUser
-                .findOne({
-                    where: {
-                        login
-                    },
-                    attributes: ['id'],
-                    transaction
-                })
-                .then(user => {
-                    return modelReview.create({
-                        text,
-                        rating,
-                        souvenirId,
-                        userId: user.id
-                    }, { transaction });
-                })
-                .then(() => {
-                    return modelSouvenir.findOne({
-                        where: {
-                            id: souvenirId
-                        },
-                        include: {
-                            model: modelReview
-                        },
-                        transaction
-                    });
-                })
-                .then((souvenir) => {
-                    const newRating = (souvenir.rating * (souvenir.reviews.length - 1) + rating) /
-                        souvenir.reviews.length;
-                    souvenir.set({
-                        rating: newRating
-                    }, { transaction });
-
-                    return souvenir.save({ transaction });
-                });
-
+        return this._models.sequelize.transaction(async transaction => {
+            const user = await modelUser.findOne({ where: { login } }, { transaction });
+            const souvenir = await modelSouvenir.findById(souvenirId, { transaction });
+            await souvenir.createReview({ userId: user.id, text, rating }, { transaction });
+            const reviews = await souvenir.getReviews({ transaction });
+            rating = (souvenir.rating * (reviews.length - 1) + rating) / (reviews.length);
+            await souvenir.update({ rating }, { transaction });
         });
     }
 
