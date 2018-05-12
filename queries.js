@@ -74,7 +74,7 @@ class Queries {
 
     getDisscusedSouvenirs(n) {
         return this.models.Souvenir.findAll({
-            attributes: ['id', 'name', 'image', 'price', 'rating'],
+            attributes: ['name', 'image', 'price', 'rating'],
             include: {
                 model: this.models.Review,
                 attributes: []
