@@ -1,5 +1,4 @@
 'use strict';
 
-module.exports = (sequelize, DataTypes) => {
-    // Ваша модель корзины
-};
+module.exports = (sequelize) =>
+    sequelize.define('carts', {});
