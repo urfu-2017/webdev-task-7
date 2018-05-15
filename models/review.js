@@ -2,12 +2,6 @@
 
 module.exports = (sequelize, DataTypes) => {
     return sequelize.define('reviews', {
-        id: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            primaryKey: true,
-            autoIncrement: true
-        },
         isApproved: {
             type: DataTypes.BOOLEAN,
             defaultValue: false
