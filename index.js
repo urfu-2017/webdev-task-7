@@ -13,6 +13,15 @@ const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, proces
     }
 });
 
+// sequelize
+//     .authenticate()
+//     .then(() => {
+//         console.info('Connection has been established successfully.');
+//     })
+//     .catch(err => {
+//         console.error('Unable to connect to the database:', err);
+//     });
+
 const Country = sequelize.import('models/country');
 const Tag = sequelize.import('models/tag');
 const Review = sequelize.import('models/review');
@@ -21,6 +30,12 @@ const Cart = sequelize.import('models/cart');
 const User = sequelize.import('models/user');
 
 // Ваши relations между моделями :)
+Review.belongsTo(User);
+Souvenir.hasMany(Review);
+Souvenir.belongsTo(Country);
+Souvenir.belongsToMany(Tag, { through: 'souvenir_tags' });
+Cart.belongsToMany(Souvenir, { through: 'cart_souvenirs' });
+Cart.belongsTo(User);
 
 module.exports.sequelize = sequelize;
 
