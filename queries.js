@@ -98,9 +98,8 @@ class Queries {
                 model: this.Review,
                 attributes: []
             },
-            order: ['id'],
             group: ['souvenir.id'],
-            having: Sequelize.literal(`count(*) >= ${n}`)
+            having: Sequelize.literal(`COUNT(*) >= ${n}`)
         });
     }
 

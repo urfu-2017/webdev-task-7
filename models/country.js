@@ -2,10 +2,7 @@
 
 module.exports = (sequelize, DataTypes) => {
     return sequelize.define('country', {
-        id: { type: DataTypes.INTEGER, allowNull: false, primaryKey: true, autoIncrement: true },
-        name: { type: DataTypes.STRING, unique: true },
-        createdAt: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW },
-        updatedAt: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW }
+        name: { type: DataTypes.STRING, unique: true }
     }, {
         indexes: [
             {

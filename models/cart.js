@@ -1,12 +1,7 @@
 'use strict';
 
-module.exports = (sequelize, DataTypes) => {
-    return sequelize.define('cart', {
-        id: { type: DataTypes.INTEGER, allowNull: false, primaryKey: true, autoIncrement: true },
-        userId: { type: DataTypes.INTEGER, foreignKey: true },
-        createdAt: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW },
-        updatedAt: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW }
-    });
+module.exports = (sequelize) => {
+    return sequelize.define('cart');
 };
 
 
