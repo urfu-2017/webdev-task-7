@@ -1,5 +1,10 @@
 'use strict';
 
 module.exports = (sequelize, DataTypes) => {
-    // Ваша модель тэга
+    return sequelize.define('tags', {
+        name: {
+            type: DataTypes.TEXT,
+            unique: true
+        }
+    });
 };

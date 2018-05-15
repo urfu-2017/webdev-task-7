@@ -1,5 +1,10 @@
 'use strict';
 
 module.exports = (sequelize, DataTypes) => {
-    // Ваша модель страны
+    return sequelize.define('countries', {
+        name: {
+            type: DataTypes.TEXT,
+            unique: true
+        }
+    });
 };

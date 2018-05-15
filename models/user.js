@@ -1,5 +1,10 @@
 'use strict';
 
 module.exports = (sequelize, DataTypes) => {
-    // Ваша модель юзера
+    return sequelize.define('users', {
+        login: {
+            type: DataTypes.TEXT,
+            unique: true
+        }
+    });
 };
