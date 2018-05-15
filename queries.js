@@ -149,14 +149,10 @@ class Queries {
         // У пользователя может быть только одна корзина, поэтому это тоже можно отразить
         // в модели.
 
-        return this._sequelize.query(`
-        SELECT SUM(souvenirs.price)
-            FROM users
-                INNER JOIN carts ON carts."userId" = users.id
-                INNER JOIN cart_souvenirs ON carts.id = cart_souvenirs."cartId"
-                INNER JOIN souvenirs ON cart_souvenirs."souvenirId" = souvenirs.id
-            WHERE users.login LIKE '${login}'`
-        ).then(result => result[0][0].sum);
+        return this._Cart.sum('souvenirs.price', {
+            include: [{ model: this._User, where: { login } }, this._Souvenir],
+            includeIgnoreAttributes: false
+        });
     }
 }
 
