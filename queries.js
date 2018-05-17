@@ -94,7 +94,7 @@ class Queries {
                 attributes: []
             },
             order: ['id'],
-            group: ['souvenirs.id'],
+            group: 'souvenirs.id',
             having: this._sequelize.where(
                 this._sequelize.fn('COUNT', this._sequelize.col('reviews.id')), '>=', n
             )
@@ -152,14 +152,15 @@ class Queries {
         // У пользователя может быть только одна корзина, поэтому это тоже можно отразить
         // в модели.
         return this._models.Cart.sum('souvenirs.price', {
-            group: ['carts.id'],
+            group: 'carts.id',
             includeIgnoreAttributes: false,
             include: [{
                 model: this._models.Souvenir,
                 attributes: []
             },
             {
-                model: this._models.User, where: {
+                model: this._models.User,
+                where: {
                     login
                 },
                 attributes: []
