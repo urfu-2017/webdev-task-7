@@ -28,7 +28,6 @@ Souvenir.belongsTo(Country);
 Souvenir.hasMany(Review);
 
 Review.belongsTo(User);
-Review.belongsTo(Souvenir);
 
 
 // Ваши relations между моделями :)
