@@ -2,7 +2,7 @@
 
 module.exports = (sequelize, DataTypes) => {
     // Ваша модель отзыва
-    return sequelize.define('review', {
+    return sequelize.define('reviews', {
         id: {
             type: DataTypes.INTEGER,
             allowNull: false,

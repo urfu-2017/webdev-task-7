@@ -2,7 +2,7 @@
 
 module.exports = (sequelize, DataTypes) => {
     // Ваша модель страны
-    return sequelize.define('country', {
+    return sequelize.define('countrys', {
         id: {
             type: DataTypes.INTEGER,
             allowNull: false,

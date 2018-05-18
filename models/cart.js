@@ -2,7 +2,7 @@
 
 module.exports = (sequelize, DataTypes) => {
     // Ваша модель корзины
-    return sequelize.define('cart', {
+    return sequelize.define('carts', {
         id: {
             type: DataTypes.INTEGER,
             allowNull: false,
