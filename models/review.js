@@ -12,6 +12,20 @@ module.exports = (sequelize, DataTypes) => {
         isApproved: {
             type: DataTypes.BOOLEAN,
             defaultValue: false
+        },
+        souvenirId: {
+            type: DataTypes.INTEGER,
+            references: {
+                model: 'souvenirs',
+                key: 'id'
+            }
+        },
+        userId: {
+            type: DataTypes.INTEGER,
+            references: {
+                model: 'users',
+                key: 'id'
+            }
         }
     },
     {
