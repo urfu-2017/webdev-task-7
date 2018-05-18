@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         price: {
             type: DataTypes.DOUBLE,
-            allowNull: false,
+            allowNull: false
         },
         rating: DataTypes.DOUBLE,
         amount: {
