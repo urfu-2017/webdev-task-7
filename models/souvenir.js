@@ -9,7 +9,10 @@ module.exports = (sequelize, DataTypes) => {
             primaryKey: true,
             autoIncrement: true
         },
-        name: DataTypes.STRING,
+        name: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
         image: {
             type: DataTypes.STRING,
             validate: {
@@ -17,7 +20,10 @@ module.exports = (sequelize, DataTypes) => {
             },
             allowNull: true
         },
-        price: DataTypes.DOUBLE,
+        price: {
+            type: DataTypes.DOUBLE,
+            allowNull: false,
+        },
         rating: DataTypes.DOUBLE,
         amount: {
             type: DataTypes.INTEGER,

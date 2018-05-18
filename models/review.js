@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = (sequelize, DataTypes) => {
-    // Ваша модель отзываreturn sequelize.define('cart', {
+    // Ваша модель отзыва
     return sequelize.define('review', {
         id: {
             type: DataTypes.INTEGER,
@@ -12,6 +12,8 @@ module.exports = (sequelize, DataTypes) => {
         text: DataTypes.TEXT,
         rating: {
             type: DataTypes.INTEGER,
+            defaultValue: 0,
+            min: 0,
             max: 5
         },
         isApproved: {
