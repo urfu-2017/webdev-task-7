@@ -1,10 +1,10 @@
 'use strict';
-const { Op } = require('sequelize');
 
 class Queries {
     constructor(models) {
         // Что-нибудь инициализируем в конструкторе
         this.sequelize = models.sequelize;
+        this.op = this.sequelize.Op;
         this._countries = models.Country;
         this._tags = models.Tag;
         this._reviews = models.Review;
@@ -25,7 +25,7 @@ class Queries {
         return this._souvenirs.findAll({
             where: {
                 price: {
-                    [Op.lte]: price
+                    [this.op.lte]: price
                 }
             }
         });
@@ -65,10 +65,10 @@ class Queries {
         return this._souvenirs.count({
             where: {
                 price: {
-                    [Op.lte]: price
+                    [this.op.lte]: price
                 },
                 rating: {
-                    [Op.gte]: rating
+                    [this.op.gte]: rating
                 }
             },
             include: {
@@ -87,7 +87,7 @@ class Queries {
         return this._souvenirs.findAll({
             where: {
                 name: {
-                    [Op.iLike]: `%${substring}%`
+                    [this.op.iLike]: `%${substring}%`
                 }
             }
         });
