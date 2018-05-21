@@ -11,10 +11,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         name: {
             type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                is: /^[a-z]+$/i
-            }
+            allowNull: false
         }
     }, {
         indexes: [{ fields: ['name'] }]
