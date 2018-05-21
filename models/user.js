@@ -12,10 +12,7 @@ module.exports = (sequelize, DataTypes) => {
         login: {
             type: DataTypes.STRING,
             allowNull: false,
-            unique: true,
-            validate: {
-                is: /^[a-z]+$/i
-            }
+            unique: true
         }
     });
 };
