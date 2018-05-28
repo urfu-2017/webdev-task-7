@@ -20,6 +20,8 @@ const Souvenir = sequelize.import('models/souvenir');
 const Cart = sequelize.import('models/cart');
 const User = sequelize.import('models/user');
 
+Country.hasMany(Souvenir);
+
 Cart.belongsTo(User);
 Cart.belongsToMany(Souvenir, { through: 'cart_souvenirs' });
 

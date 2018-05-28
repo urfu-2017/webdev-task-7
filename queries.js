@@ -78,7 +78,7 @@ class Queries {
         return this._models.Souvenir.findAll({
             where: {
                 name: {
-                    [Op.iLike]: `%${substring}`
+                    [Op.iLike]: `%${substring}%`
                 }
             }
         });
