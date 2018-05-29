@@ -1,4 +1,4 @@
-'use strict';
+﻿'use strict';
 
 require('dotenv').config({ path: `${__dirname}/.env` });
 const Sequalize = require('sequelize');
@@ -21,6 +21,13 @@ const Cart = sequelize.import('models/cart');
 const User = sequelize.import('models/user');
 
 // Ваши relations между моделями :)
+Souvenir.hasMany(Review);
+Souvenir.belongsToMany(Tag, { through: 'SouvenirTags' });
+Souvenir.belongsTo(Country);
+Review.belongsTo(User);
+Cart.belongsTo(User);
+User.hasMany(Cart);
+Cart.belongsToMany(Souvenir, { through: 'CartSouvenirs' });
 
 module.exports.sequelize = sequelize;
 
