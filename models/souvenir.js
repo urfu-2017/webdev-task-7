@@ -2,7 +2,7 @@
 
 module.exports = (sequelize, DataTypes) => {
     // Ваша модель сувенира
-	return sequelize.define('souvenir', {
+    return sequelize.define('souvenir', {
         id: {
             type: DataTypes.INTEGER,
             allowNull: false,
