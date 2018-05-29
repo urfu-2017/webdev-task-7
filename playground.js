@@ -1,4 +1,4 @@
-'use strict';
+﻿'use strict';
 
 const models = require('./index');
 const Queries = require('./queries');
@@ -10,7 +10,7 @@ const Queries = require('./queries');
 
     try {
         // Здесь можно делать запросы, чтобы проверять, что они правильно работают
-        const result = await queries.getAllSouvenirs();
+        const result = await queries.deleteOutOfStockSouvenirs();
 
         console.info(result);
     } catch (error) {
